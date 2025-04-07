@@ -4,7 +4,7 @@ const mustacheExpress = require('mustache-express');
 const path = require('path');
 const session = require('express-session');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Import route files
 const adminRoutes = require('./routes/admin');
@@ -128,6 +128,6 @@ app.post('/change-language', (req, res) => {
 
 
 // ------------------- SERVER START ------------------- //
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server is running on port ${PORT}`);
 });
