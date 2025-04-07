@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const coursesDB = require('../db/coursesDB');
 const usersDB = require('../db/usersDB');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { t } = require('../translations'); // ✅ Używamy centralnego tłumaczenia
 
 // Domyślne przekierowanie z /courses na /courses/weekly

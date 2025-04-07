@@ -1,7 +1,7 @@
 // db/usersDB.js
 
 const Datastore = require('@seald-io/nedb');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const usersDB = new Datastore({ filename: 'db/users.db', autoload: true });
 
