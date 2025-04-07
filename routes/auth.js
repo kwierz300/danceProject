@@ -1,7 +1,7 @@
 // ======================= IMPORTY =======================
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const usersDB = require('../db/usersDB');
 const loginLogsDB = require('../db/loginLogsDB');
 
