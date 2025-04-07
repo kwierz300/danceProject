@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="{{language}}">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{title}}</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <!-- Twój styl -->
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <!-- Pasek nawigacji -->
+  {{> navbar}}
+
+  <!-- 🔽 Sekcja główna z tłem -->
+  <section class="hero-section position-relative mb-0">
+    <img src="/hero.jpg" alt="Banner" class="w-100 hero-img" />
+    <div class="hero-text text-center align-bottom">
+      <h1 class="display-4">{{#t}}Welcome to our BestDanceSchool!{{/t}}</h1>
+    </div>
+  </section>
+
+  <!-- 🔽 Główna treść -->
+  <main class="container text-center main-description mb-5">
+    <p>
+      {{#t}}We offer a wide variety of dance classes — from weekly sessions to intensive weekend workshops. Our instructors will keep you smiling, fit and full of dancing energy!{{/t}}
+    </p>
+    <p>
+      {{#t}}Join our community and start your dance journey today!{{/t}}
+    </p>
+
+    {{^sessionUser}}
+    <div class="d-flex justify-content-center main-buttons mt-4">
+      <a href="/login" class="btn btn-navbar">{{#t}}Login{{/t}}</a>
+      <a href="/login#register" class="btn btn-navbar-alt">{{#t}}Register{{/t}}</a>
+      <a href="/courses" class="btn btn-navbar-muted">{{#t}}Book without logging in{{/t}}</a>
+    </div>
+    {{/sessionUser}}
+
+    <!-- 🔽 Google Map -->
+    <div class="map-container mt-4">
+      <iframe
+        width="100%"
+        height="350"
+        style="border:0;"
+        loading="lazy"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://maps.google.com/maps?q=People's+Palace,Glasgow+Green&z=15&output=embed">
+      </iframe>
+    </div>
+  </main>
+
+  <!-- Stopka -->
+  {{> footer}}
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

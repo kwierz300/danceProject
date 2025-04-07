@@ -1,0 +1,43 @@
+<tr class="align-middle">
+  <td>{{firstName}}</td>
+  <td>{{lastName}}</td>
+  <td>{{username}}</td>
+  <td>{{role}}</td>
+  <td>
+    <div class="dropup">
+      <button class="btn btn-sm btn-navbar-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        {{#t}}Actions{{/t}}
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end p-3">
+
+        <!-- Edytuj dane -->
+        <li>
+          <form method="GET" action="/organiser/edit/{{_id}}" class="mb-2">
+            <button class="btn btn-sm btn-navbar w-100">{{#t}}Edit{{/t}}</button>
+          </form>
+        </li>
+
+        <!-- Usuń użytkownika -->
+        <li>
+          <form method="POST" action="/organiser/delete/{{_id}}" class="mb-2" onsubmit="return confirm('{{#t}}Are you sure you want to delete this user?{{/t}}');">
+            <button class="btn btn-sm btn-outline-danger w-100">{{#t}}Delete{{/t}}</button>
+          </form>
+        </li>
+
+        <!-- Resetuj hasło -->
+        <li>
+          <form method="POST" action="/organiser/reset-password/{{_id}}">
+            <input type="password" name="newPassword" class="form-control form-control-sm mb-2" placeholder="{{#t}}New password{{/t}}" required minlength="8">
+            {{#isSelf}}
+              <input type="password" name="confirmPassword" class="form-control form-control-sm mb-2" placeholder="{{#t}}Confirm your password{{/t}}" required>
+            {{/isSelf}}
+            <button type="submit" class="btn btn-sm btn-navbar-alt w-100" onclick="return confirm('{{#t}}Reset this user password?{{/t}}')">
+              {{#t}}Reset password{{/t}}
+            </button>
+          </form>
+        </li>
+
+      </ul>
+    </div>
+  </td>
+</tr>

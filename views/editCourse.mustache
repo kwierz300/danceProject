@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>{{#t}}Edit course{{/t}}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/style.css" rel="stylesheet">
+</head>
+<body>
+  {{> navbar }}
+
+  <main class="container mt-5">
+    <h1 class="mb-4 text-center">{{#t}}Edit course{{/t}}: {{course.title}}</h1>
+
+    <form method="POST" action="/organiser/editCourse/{{course._id}}" class="form-wrapper">
+      <input type="hidden" name="returnTo" value="{{returnTo}}">
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Course title{{/t}}</label>
+        <input type="text" class="form-control" name="title" value="{{course.title}}" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Style{{/t}}</label>
+        <select name="style" class="form-select" required>
+          <option value="Salsa" {{#course.isStyleSalsa}}selected{{/course.isStyleSalsa}}>{{#t}}Salsa{{/t}}</option>
+          <option value="Hip-Hop" {{#course.isStyleHipHop}}selected{{/course.isStyleHipHop}}>{{#t}}Hip-Hop{{/t}}</option>
+          <option value="Taniec towarzyski" {{#course.isStyleBallroom}}selected{{/course.isStyleBallroom}}>{{#t}}Ballroom{{/t}}</option>
+          <option value="Tango" {{#course.isStyleTango}}selected{{/course.isStyleTango}}>{{#t}}Tango{{/t}}</option>
+          <option value="Bachata" {{#course.isStyleBachata}}selected{{/course.isStyleBachata}}>{{#t}}Bachata{{/t}}</option>
+          <option value="Jazz" {{#course.isStyleJazz}}selected{{/course.isStyleJazz}}>{{#t}}Jazz{{/t}}</option>
+          <option value="Balet" {{#course.isStyleBalet}}selected{{/course.isStyleBalet}}>{{#t}}Ballet{{/t}}</option>
+          <option value="Street Dance" {{#course.isStyleStreet}}selected{{/course.isStyleStreet}}>{{#t}}Street Dance{{/t}}</option>
+          <option value="Zumba" {{#course.isStyleZumba}}selected{{/course.isStyleZumba}}>{{#t}}Zumba{{/t}}</option>
+          <option value="Contemporary" {{#course.isStyleContemporary}}selected{{/course.isStyleContemporary}}>{{#t}}Contemporary{{/t}}</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Level{{/t}}</label>
+        <select class="form-select" name="level" required>
+          <option value="">{{#t}}Select level{{/t}}</option>
+          <option value="Początkujący" {{#course.isLevelBeginner}}selected{{/course.isLevelBeginner}}>{{#t}}Beginner{{/t}}</option>
+          <option value="Średniozaawansowany" {{#course.isLevelIntermediate}}selected{{/course.isLevelIntermediate}}>{{#t}}Intermediate{{/t}}</option>
+          <option value="Zaawansowany" {{#course.isLevelAdvanced}}selected{{/course.isLevelAdvanced}}>{{#t}}Advanced{{/t}}</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Description{{/t}}</label>
+        <textarea class="form-control" name="description" required>{{course.description}}</textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Location{{/t}}</label>
+        <input type="text" class="form-control" name="location" value="{{course.location}}" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Full price{{/t}}</label>
+        <input type="number" class="form-control" name="fullPrice" value="{{course.fullPrice}}" required min="0">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Single class price{{/t}}</label>
+        <input type="number" class="form-control" name="singlePrice" value="{{course.singlePrice}}" required min="0">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Capacity{{/t}}</label>
+        <input type="number" class="form-control" name="capacity" value="{{course.capacity}}" required min="1">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Total number of classes:{{/t}}</label>
+        <input type="number" class="form-control" name="totalClasses" value="{{course.totalClasses}}" required min="1">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Duration{{/t}} ({{#t}}minutes{{/t}})</label>
+        <input type="number" class="form-control" name="duration" value="{{course.duration}}" required min="15" step="15">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Course type:{{/t}}</label>
+        <select name="courseType" class="form-select" required>
+          <option value="Weekly Sessions" {{#course.isTypeWeekly}}selected{{/course.isTypeWeekly}}>{{#t}}Weekly Sessions{{/t}}</option>
+          <option value="Weekend Workshop" {{#course.isTypeWeekend}}selected{{/course.isTypeWeekend}}>{{#t}}Weekend Workshops{{/t}}</option>
+          <option value="Single Classes" {{#course.isTypeSingle}}selected{{/course.isTypeSingle}}>{{#t}}Single Classes{{/t}}</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Dates{{/t}}:</label>
+        <div id="sessionsContainer">
+          {{#course.sessions}}
+            <div class="input-group mb-2 session-entry">
+              <input type="datetime-local" name="sessions" class="form-control" value="{{.}}" required>
+              <button type="button" class="btn btn-navbar-muted remove-session">&times;</button>
+            </div>
+          {{/course.sessions}}
+        </div>
+        <button type="button" id="addSession" class="btn btn-navbar-alt mb-3">{{#t}}Add date{{/t}}</button>
+
+        <div class="d-flex gap-3 justify-content-center mt-4">
+          <button type="submit" class="btn btn-navbar">{{#t}}Save changes{{/t}}</button>
+          <a href="{{returnTo}}" class="btn btn-navbar-muted">{{#t}}Cancel{{/t}}</a>
+        </div>
+    </form>
+
+    <hr class="my-5">
+
+    <form method="POST" action="/organiser/delete-course/{{course._id}}" onsubmit="return confirm('{{#t}}Are you sure you want to delete this course?{{/t}}')" class="form-wrapper mt-4">
+      <h4 class="text-danger">{{#t}}Delete course{{/t}}</h4>
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Confirm password{{/t}}</label>
+        <input type="password" name="confirmPassword" class="form-control" required placeholder="{{#t}}Enter your password{{/t}}">
+      </div>
+      <button type="submit" class="btn btn-navbar-muted">{{#t}}Delete course{{/t}}</button>
+    </form>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('sessionsContainer');
+      const addBtn = document.getElementById('addSession');
+
+      const getMinDateTime = () => {
+        const now = new Date();
+        now.setSeconds(0, 0);
+        return now.toISOString().slice(0, 16);
+      };
+
+      addBtn.addEventListener('click', () => {
+        const div = document.createElement('div');
+        div.className = 'input-group mb-2 session-entry';
+
+        const input = document.createElement('input');
+        input.type = 'datetime-local';
+        input.name = 'sessions';
+        input.className = 'form-control';
+        input.required = true;
+        input.min = getMinDateTime();
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-navbar-muted remove-session';
+        btn.innerHTML = '&times;';
+        btn.onclick = () => div.remove();
+
+        div.appendChild(input);
+        div.appendChild(btn);
+        container.appendChild(div);
+      });
+
+      document.querySelectorAll('.remove-session').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.target.closest('.session-entry').remove();
+        });
+      });
+    });
+  </script>
+</body>
+</html>

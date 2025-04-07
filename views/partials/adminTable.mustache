@@ -1,0 +1,76 @@
+<tr class="align-middle">
+  <td>{{firstName}}</td>
+  <td>{{lastName}}</td>
+  <td>{{username}}</td>
+  <td>{{role}}</td>
+  <td>
+    <div class="dropup">
+      <button 
+        class="btn btn-sm btn-navbar-muted dropdown-toggle" 
+        type="button" 
+        data-bs-toggle="dropdown" 
+        aria-expanded="false" 
+        data-bs-popper="static">
+        {{#t}}Actions{{/t}}
+      </button>
+
+      <ul class="dropdown-menu dropdown-menu-end p-3">
+
+        {{^isAdmin}}
+          <li>
+            <form method="POST" action="/admin/toggle-role/{{_id}}" class="mb-2">
+              <button class="btn btn-sm btn-navbar-alt w-100">{{#t}}Change role{{/t}}</button>
+            </form>
+          </li>
+
+          <li>
+            <form method="GET" action="/admin/edit/{{_id}}" class="mb-2">
+              <button class="btn btn-sm btn-navbar w-100">{{#t}}Edit{{/t}}</button>
+            </form>
+          </li>
+
+          <li>
+            <form method="POST" action="/admin/delete/{{_id}}" class="mb-2" onsubmit="return confirm('{{#t}}Are you sure you want to delete this user?{{/t}}');">
+              <button class="btn btn-sm btn-outline-danger w-100">{{#t}}Delete{{/t}}</button>
+            </form>
+          </li>
+
+          {{#canBePromoted}}
+            <li>
+              <form method="POST" action="/admin/make-admin/{{_id}}" class="mb-2">
+                <input type="password" name="confirmPassword" class="form-control form-control-sm mb-2" placeholder="{{#t}}Admin password{{/t}}" required>
+                <button type="submit" class="btn btn-sm btn-navbar-muted w-100" onclick="return confirm('{{#t}}Promote this user to admin?{{/t}}')">
+                  {{#t}}Promote to admin{{/t}}
+                </button>
+              </form>
+            </li>
+          {{/canBePromoted}}
+        {{/isAdmin}}
+
+        {{#canBeDemoted}}
+          <li>
+            <form method="POST" action="/admin/demote/{{_id}}" class="mb-2">
+              <input type="password" name="confirmPassword" class="form-control form-control-sm mb-2" placeholder="{{#t}}Admin password{{/t}}" required>
+              <button type="submit" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('{{#t}}Demote this admin?{{/t}}')">
+                {{#t}}Demote{{/t}}
+              </button>
+            </form>
+          </li>
+        {{/canBeDemoted}}
+
+        <li>
+          <form method="POST" action="/admin/reset-password/{{_id}}">
+            <input type="password" name="newPassword" class="form-control form-control-sm mb-2" placeholder="{{#t}}New password{{/t}}" required minlength="8">
+            {{#isSelf}}
+              <input type="password" name="confirmPassword" class="form-control form-control-sm mb-2" placeholder="{{#t}}Confirm your password{{/t}}" required>
+            {{/isSelf}}
+            <button type="submit" class="btn btn-sm btn-navbar w-100" onclick="return confirm('{{#t}}Reset this user password?{{/t}}')">
+              {{#t}}Reset password{{/t}}
+            </button>
+          </form>
+        </li>
+
+      </ul>
+    </div>
+  </td>
+</tr>

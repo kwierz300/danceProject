@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Logowanie / Rejestracja</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="page-wrapper">
+  {{> navbar}}
+
+  <main class="container mt-5">
+    <h1 class="mb-4 text-center">{{#t}}Log in or register{{/t}}</h1>
+
+    <!-- PRZEŁĄCZNIKI -->
+    <div class="text-center mb-4">
+      <button class="btn btn-navbar me-2" onclick="showLogin()">{{#t}}Login{{/t}}</button>
+      <button class="btn btn-navbar-alt me-2" onclick="showRegister()">{{#t}}Register{{/t}}</button>
+      <a href="/" class="btn btn-navbar-muted">{{#t}}Home{{/t}}</a>
+    </div>
+
+
+
+    <!-- LOGOWANIE -->
+    <div id="loginForm">
+      <form method="POST" action="/login" class="form-wrapper">
+        <div class="mb-3">
+          <label class="form-label">{{#t}}Username{{/t}}</label>
+          <input type="text" class="form-control" name="username" required value="{{loginData.username}}">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{#t}}Password{{/t}}</label>
+          <div class="input-group">
+            <input type="password" class="form-control" name="password" id="passwordLogin" required>
+            <button type="button" class="btn btn-outline-secondary" id="togglePasswordLogin">👁</button>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 mt-3">
+          <button type="submit" class="btn btn-navbar">{{#t}}Log in{{/t}}</button>
+          <button type="reset" class="btn btn-navbar-muted">{{#t}}Reset{{/t}}</button>
+        </div>
+      </form>
+
+      {{#errorMessage}}
+        <div class="alert alert-danger mt-3">{{errorMessage}}</div>
+      {{/errorMessage}}
+    </div>
+
+    <!-- REJESTRACJA -->
+    <div id="registerForm" class="d-none mt-4">
+      <form method="POST" action="/register" id="regForm" class="form-wrapper">
+        <div class="mb-3">
+          <label class="form-label">{{#t}}First name{{/t}}</label>
+          <input type="text" class="form-control" name="firstName" required pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\s]+" title="{{#t}}Only letters are allowed{{/t}}" value="{{formData.firstName}}">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{#t}}Last name{{/t}}</label>
+          <input type="text" class="form-control" name="lastName" required pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\s]+" title="{{#t}}Only letters are allowed{{/t}}" value="{{formData.lastName}}">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{#t}}User name{{/t}}</label>
+          <input type="text" class="form-control" name="username" required pattern="[a-zA-Z0-9]+" title="{{#t}}Only letters and numbers, no spaces{{/t}}" value="{{formData.username}}">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{#t}}Password{{/t}}</label>
+          <div class="input-group">
+            <input type="password" class="form-control" name="password" id="password" required minlength="8"
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$"
+              title="{{#t}}The password must be at least 8 characters long, contain an uppercase and lowercase letter, a number and a special character{{/t}}">
+            <button type="button" class="btn btn-outline-secondary" id="togglePassword">👁</button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{#t}}Repeat password{{/t}}</label>
+          <div class="input-group">
+            <input type="password" class="form-control" id="confirmPassword" required title="{{#t}}Please enter the same password again{{/t}}">
+            <button type="button" class="btn btn-outline-secondary" id="toggleConfirm">👁</button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{#t}}E-mail{{/t}}</label>
+          <input type="email" class="form-control" name="email" required title="{{#t}}Please provide a valid email address{{/t}}" value="{{formData.email}}">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{#t}}Phone number{{/t}}</label>
+          <input type="tel" class="form-control" name="phone" required pattern="[0-9]{6,15}" title="{{#t}}Enter only numbers{{/t}}" value="{{formData.phone}}">
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 mt-3">
+          <button type="submit" class="btn btn-navbar-alt">{{#t}}Register now{{/t}}</button>
+          <button type="reset" class="btn btn-navbar-muted">{{#t}}Reset{{/t}}</button>
+
+        </div>
+      </form>
+
+      {{#errorMessage}}
+        <div class="alert alert-danger mt-3">{{errorMessage}}</div>
+      {{/errorMessage}}
+    </div>
+  </main>
+
+
+  <!-- SKRYPTY -->
+  <script>
+
+    // Mini tłumacz do użytku w JS (ograniczony do pojedynczych komunikatów)
+      const t = (key) => {
+        const translations = {
+          "Passwords do not match": {
+            en: "Passwords do not match",
+            pl: "Hasła nie są identyczne"
+          }
+        };
+        const lang = "{{language}}" || "en"; // zmienna języka z Mustache
+        return translations[key]?.[lang] || key;
+      };
+    // Przełączanie widoków
+    function showLogin() {
+      document.getElementById('loginForm').classList.remove('d-none');
+      document.getElementById('registerForm').classList.add('d-none');
+      history.replaceState(null, null, '#login');
+    }
+
+    function showRegister() {
+      document.getElementById('registerForm').classList.remove('d-none');
+      document.getElementById('loginForm').classList.add('d-none');
+      history.replaceState(null, null, '#register');
+    }
+
+    // Automatyczne wykrywanie #register w adresie
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.location.hash === '#register') {
+        showRegister();
+      } else {
+        showLogin();
+      }
+    });
+
+    // Pokazywanie/ukrywanie haseł
+    document.getElementById('togglePasswordLogin').addEventListener('click', function () {
+      const input = document.getElementById('passwordLogin');
+      const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+      input.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁' : '🙈';
+    });
+
+    document.getElementById('togglePassword').addEventListener('click', function () {
+      const input = document.getElementById('password');
+      const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+      input.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁' : '🙈';
+    });
+
+    document.getElementById('toggleConfirm').addEventListener('click', function () {
+      const input = document.getElementById('confirmPassword');
+      const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+      input.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁' : '🙈';
+    });
+
+    // Sprawdzanie zgodności haseł
+    const regForm = document.getElementById('regForm');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    regForm.addEventListener('submit', function (e) {
+      if (password.value !== confirmPassword.value) {
+        e.preventDefault();
+        confirmPassword.setCustomValidity(t("Passwords do not match"));
+        confirmPassword.reportValidity();
+      } else {
+        confirmPassword.setCustomValidity("");
+      }
+    });
+
+    confirmPassword.addEventListener('input', function () {
+      confirmPassword.setCustomValidity("");
+    });
+  </script>
+
+      <!-- Stopka -->
+    {{> footer}}
+    </div>
+</body>
+</html>

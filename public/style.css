@@ -1,0 +1,388 @@
+/* ========== Layout ogólny strony ========== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4f6f8;
+  color: #2c3e50;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+#page-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  margin: 1rem auto;
+  width: 95%;
+  max-width: 1000px;
+}
+
+/* ========== Navbar ========== */
+.custom-navbar {
+  background-color: #2c3e50;
+}
+
+.custom-navbar .nav-link {
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .nav-link.active {
+  color: #f0c330;
+}
+
+.custom-navbar .nav-link.active {
+  border-bottom: 2px solid #f0c330;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.navbar-brand:hover {
+  color: #f0c330;
+}
+
+.text-navbar {
+  color: #2c3e50;
+}
+
+/* ========== Stopka ========== */
+.footer {
+  background-color: #2c3e50;
+  color: #ffffff;
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  margin-top: auto;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
+}
+
+.footer a {
+  color: #f0c330;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-row {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ========== Tabele i dropdowny (admin/organiser/user) ========== */
+.table-section {
+  margin-bottom: 3rem;
+  overflow: visible !important;
+  position: relative;
+  z-index: 1;
+}
+
+table.table {
+  font-size: 1.2rem;
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: separate;
+  overflow: visible !important;
+}
+
+th, td {
+  text-align: center !important;
+  vertical-align: middle !important;
+  white-space: nowrap;
+  height: 100px;
+  overflow: visible !important;
+  text-overflow: ellipsis;
+  position: relative;
+  z-index: 1;
+}
+
+th {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.dropdown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
+  z-index: 1000;
+}
+
+.dropdown .btn {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  z-index: 1001;
+}
+
+.dropdown-menu {
+  z-index: 2000 !important;
+  position: absolute !important;
+  top: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 240px;
+  max-width: 260px;
+  padding: 10px;
+  overflow: visible !important;
+  max-height: none !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-menu form {
+  margin-bottom: 0.5rem;
+}
+
+.dropdown-menu form:last-child {
+  margin-bottom: 0;
+}
+
+.container,
+.table,
+.table-section,
+table,
+thead,
+tbody,
+tr,
+td {
+  overflow: visible !important;
+  position: static !important;
+}
+
+/* ========== Formularze (logowanie, kontakt, edycja, kursy) ========== */
+.form-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-form label,
+.contact-form input,
+.contact-form textarea,
+.contact-form button,
+.form-label {
+  font-size: 1.1rem;
+}
+
+.contact-form h1 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.course-wrapper {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* ========== Przyciskowe style ========== */
+.btn-navbar {
+  background-color: #4a5a6a;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-navbar:hover {
+  color: #f0c330;
+  background-color: #3c4c5c;
+}
+
+.btn-navbar-alt {
+  background-color: #3d6b54;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-navbar-alt:hover {
+  color: #f0c330;
+  background-color: #335e49;
+}
+
+.btn-navbar-muted {
+  background-color: #adb5bd;
+  color: #2c3e50;
+  font-weight: 500;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-navbar-muted:hover {
+  background-color: #ced4da;
+  color: #2c3e50;
+}
+
+/* ========== Badge'y ========== */
+.bg-navbar-date {
+  background-color: #4a5a6a;
+  color: white;
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.badge.bg-navbar {
+  background-color: #4a5a6a;
+  font-size: 0.9rem;
+  padding: 0.5em 0.8em;
+  margin-bottom: 0.2rem;
+}
+
+/* ========== Kursy (karty) ========== */
+.row {
+  row-gap: 2rem;
+  justify-content: center; /* <-- to centruje całość jeśli jest mniej kart */
+}
+
+.course-card {
+  border-radius: 1rem;
+  background-color: #ffffff;
+  font-size: 1.05rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+}
+
+.course-card .card-title {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.course-card p {
+  margin-bottom: 0.4rem;
+  font-size: 1.1rem;
+  color: #34495e;
+}
+
+/* ========== HERO SECTION ========== */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  min-height: 600px;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.hero-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.hero-text {
+  position: absolute;
+  bottom: 30px; /* tekst na dole zdjęcia */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  text-align: center;
+  color: #fffbe6;
+  text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.65);
+  padding: 0 1rem;
+  max-width: 90%;
+}
+
+.hero-text h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+/* Większa karta kursu */
+.course-card-lg {
+  border-radius: 1.2rem;
+  background-color: #ffffff;
+  padding: 1.8rem;
+  font-size: 1.15rem;
+  transition: box-shadow 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.course-card-lg .card-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+
+/* Nowy lekki styl przycisków */
+.btn-outline-navbar {
+  background-color: transparent;
+  color: #4a5a6a;
+  border: 2px solid #4a5a6a;
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 0.6rem 1.2rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-navbar:hover {
+  background-color: #4a5a6a;
+  color: #fff;
+}
+
+
+/* ========== MAIN WELCOME SECTION ========== */
+.main-description {
+  padding: 1.5rem 1rem 1.5rem; /* zmniejszony padding z góry i dołu */
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+.main-description p {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #2c3e50;
+  max-width: 850px;
+  margin: 0 auto 1.2rem auto;
+  line-height: 1.8;
+  letter-spacing: 0.3px;
+}
+
+/* ========== BUTTONS ========== */
+.main-buttons {
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+.main-buttons .btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+}
+

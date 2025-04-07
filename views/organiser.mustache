@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>{{#t}}Organiser Panel{{/t}}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- Własny styl -->
+  <link rel="stylesheet" href="/style.css">
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => alert.remove());
+      }, 5000);
+    });
+  </script>
+</head>
+
+<body>
+  {{> navbar}}
+
+  <div class="container mt-5">
+    {{#successMessage}}
+      <div class="alert alert-success text-center">{{successMessage}}</div>
+    {{/successMessage}}
+
+    {{#errorMessage}}
+      <div class="alert alert-danger text-center">{{errorMessage}}</div>
+    {{/errorMessage}}
+
+    <h1 class="mb-3 text-center">{{#t}}Organiser Panel{{/t}}</h1>
+    <p class="text-center">{{#t}}Logged in as:{{/t}} <strong>{{username}}</strong></p>
+
+    <form method="GET" action="/organiser" class="mb-5 d-flex justify-content-center gap-2" role="search">
+      <input type="text"
+             class="form-control w-25"
+             name="lastName"
+             placeholder="{{#t}}Search by last name{{/t}}"
+             value="{{searchQuery}}">
+      <button type="submit" class="btn btn-outline-primary">{{#t}}Search{{/t}}</button>
+      {{#searchQuery}}
+        <a href="/organiser" class="btn btn-outline-secondary">{{#t}}Clear{{/t}}</a>
+      {{/searchQuery}}
+    </form>
+
+    <hr>
+
+    <!-- Tabela użytkowników -->
+    <div class="table-section">
+      <h4 class="text-center mb-3">{{#t}}Users{{/t}}</h4>
+      <table class="table table-bordered align-middle">
+        <thead>
+          <tr>
+            <th><a href="/organiser?sortBy=firstName&order={{nextOrder}}">{{#t}}First Name{{/t}}{{#isSortedByFirstName}}{{sortArrow}}{{/isSortedByFirstName}}</a></th>
+            <th><a href="/organiser?sortBy=lastName&order={{nextOrder}}">{{#t}}Last Name{{/t}}{{#isSortedByLastName}}{{sortArrow}}{{/isSortedByLastName}}</a></th>
+            <th><a href="/organiser?sortBy=username&order={{nextOrder}}">{{#t}}Username{{/t}}{{#isSortedByUsername}}{{sortArrow}}{{/isSortedByUsername}}</a></th>
+            <th>{{#t}}Role{{/t}}</th>
+            <th>{{#t}}Actions{{/t}}</th>
+          </tr>
+        </thead>
+        <tbody>
+        {{#users}}
+          {{> organiserTable }}
+        {{/users}}
+
+        {{^users}}
+          <tr>
+            <td colspan="5" class="text-center">{{#t}}No users to display.{{/t}}</td>
+          </tr>
+        {{/users}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="my-5"> 
+<div class="table-section">
+  <h4 class="text-center mb-3">{{#t}}Add new course{{/t}}</h4>
+  <form method="POST" action="/organiser/add-course" class="mx-auto" style="max-width: 500px;">
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Course title{{/t}}</label>
+      <input type="text" class="form-control" name="title" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Course type:{{/t}}</label>
+      <select name="courseType" class="form-select" required>
+        <option value="">-- {{#t}}Select{{/t}} --</option>
+        <option value="Weekend Workshop">{{#t}}Weekend Workshops{{/t}}</option>
+        <option value="Weekly Sessions">{{#t}}Weekly Sessions{{/t}}</option>
+        <option value="Single Classes">{{#t}}Single Classes{{/t}}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Style{{/t}}</label>
+      <select class="form-select" name="style" required>
+        <option value="">{{#t}}Select dance style{{/t}}</option>
+        <option>{{#t}}Salsa{{/t}}</option>
+        <option>{{#t}}Hip-Hop{{/t}}</option>
+        <option>{{#t}}Ballroom{{/t}}</option>
+        <option>{{#t}}Tango{{/t}}</option>
+        <option>{{#t}}Bachata{{/t}}</option>
+        <option>{{#t}}Jazz{{/t}}</option>
+        <option>{{#t}}Ballet{{/t}}</option>
+        <option>{{#t}}Street Dance{{/t}}</option>
+        <option>{{#t}}Zumba{{/t}}</option>
+        <option>{{#t}}Contemporary{{/t}}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Level{{/t}}</label>
+      <select class="form-select" name="level" required>
+        <option value="">{{#t}}Select level{{/t}}</option>
+        <option>{{#t}}Beginner{{/t}}</option>
+        <option>{{#t}}Intermediate{{/t}}</option>
+        <option>{{#t}}Advanced{{/t}}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Duration{{/t}} ({{#t}}minutes{{/t}})</label>
+      <input type="number" class="form-control" name="duration" required min="10" step="1">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Number of sessions{{/t}}</label>
+      <input type="number" class="form-control" name="totalClasses" required min="1">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Description{{/t}}</label>
+      <textarea class="form-control" name="description" required></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Location{{/t}}</label>
+      <input type="text" class="form-control" name="location" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Full price{{/t}}</label>
+      <input type="number" class="form-control" name="fullPrice" required min="0" step="0.01">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Single class price{{/t}}</label>
+      <input type="number" class="form-control" name="singlePrice" required min="0" step="0.01">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Capacity:{{/t}}</label>
+      <input type="number" class="form-control" name="capacity" required min="1">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{#t}}Dates{{/t}}</label>
+      <div id="sessionsList"></div>
+      <div class="input-group">
+        <input type="datetime-local" id="sessionInput" class="form-control">
+        <button type="button" class="btn btn-outline-primary" onclick="addSession()">{{#t}}Add date{{/t}}</button>
+      </div>
+      <input type="hidden" name="sessions" id="sessionsHidden">
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <button type="submit" class="btn btn-navbar-alt mt-3 mb-5">{{#t}}Create course{{/t}}</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const sessionInput = document.getElementById('sessionInput');
+  const sessionsList = document.getElementById('sessionsList');
+  const sessionsHidden = document.getElementById('sessionsHidden');
+  let sessions = [];
+
+  function addSession() {
+    const value = sessionInput.value;
+    if (!value || sessions.includes(value)) return;
+
+    sessions.push(value);
+    sessionInput.value = '';
+    renderSessions();
+    sessionsHidden.value = sessions.join(',');
+  }
+
+  function renderSessions() {
+    sessionsList.innerHTML = '';
+    sessions.forEach((s, i) => {
+      const item = document.createElement('div');
+      item.classList.add('mb-1');
+      item.innerHTML = `
+        ${new Date(s).toLocaleString()}
+        <button type="button" class="btn btn-sm btn-danger ms-2" onclick="removeSession(${i})">Usuń</button>
+      `;
+      sessionsList.appendChild(item);
+    });
+  }
+
+  function removeSession(index) {
+    sessions.splice(index, 1);
+    renderSessions();
+    sessionsHidden.value = sessions.join(',');
+  }
+
+  // Zabezpieczenie przed utratą dat przy wysyłce
+  document.querySelector('form').addEventListener('submit', () => {
+    sessionsHidden.value = sessions.join(',');
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-IYOx1V+rT+nNIX0B2MKa1EMUgq++ZnTrlzqjRBVSkVOqpl5zDkeX2v3MZ8xR7i3v" crossorigin="anonymous"></script>
+</body>
+</html>

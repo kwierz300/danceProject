@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  {{> navbar}}
+
+  <main class="container mt-5">
+    <!-- Tytuł strony -->
+    <h1 class="mb-4 text-center">{{title}}</h1>
+
+    <!-- Komunikat o błędzie -->
+    {{#errorMessage}}
+      <div class="alert alert-danger text-center">{{errorMessage}}</div>
+    {{/errorMessage}}
+
+    <!-- Formularz edycji danych użytkownika -->
+    <form method="POST" action="{{#isOrganiser}}/organiser/edit/{{user._id}}{{/isOrganiser}}{{#isAdmin}}/admin/edit/{{user._id}}{{/isAdmin}}" class="form-wrapper">
+      <input type="hidden" name="returnTo" value="{{returnTo}}">
+
+      <!-- Imię -->
+      <div class="mb-3">
+        <label class="form-label">{{#t}}First name{{/t}}</label>
+        <input type="text" class="form-control" name="firstName"
+          value="{{formData.firstName}}{{^formData.firstName}}{{user.firstName}}{{/formData.firstName}}"
+          required
+          pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\s]+"
+          title="{{#t}}Only letters are allowed{{/t}}">
+      </div>
+
+      <!-- Nazwisko -->
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Last name{{/t}}</label>
+        <input type="text" class="form-control" name="lastName"
+          value="{{formData.lastName}}{{^formData.lastName}}{{user.lastName}}{{/formData.lastName}}"
+          required
+          pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\s]+"
+          title="{{#t}}Only letters are allowed{{/t}}">
+      </div>
+
+      <!-- Login -->
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Username{{/t}}</label>
+        <input type="text" class="form-control" name="username"
+          value="{{formData.username}}{{^formData.username}}{{user.username}}{{/formData.username}}"
+          required
+          pattern="[a-zA-Z0-9]+"
+          title="{{#t}}Only letters and numbers{{/t}}">
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Email address{{/t}}</label>
+        <input type="email" class="form-control" name="email"
+          value="{{formData.email}}{{^formData.email}}{{user.email}}{{/formData.email}}"
+          required
+          title="{{#t}}Enter a valid email{{/t}}">
+      </div>
+
+      <!-- Telefon -->
+      <div class="mb-3">
+        <label class="form-label">{{#t}}Phone number{{/t}}</label>
+        <input type="tel" class="form-control" name="phone"
+          value="{{formData.phone}}{{^formData.phone}}{{user.phone}}{{/formData.phone}}"
+          required
+          pattern="[0-9]{6,15}"
+          title="{{#t}}Digits only{{/t}}">
+      </div>
+
+      <!-- Przyciski -->
+      <div class="d-flex gap-3 justify-content-center mt-4">
+        <button type="submit" class="btn btn-navbar">{{#t}}Save changes{{/t}}</button>
+        <a href="{{#isOrganiser}}/organiser{{/isOrganiser}}{{#isAdmin}}/admin{{/isAdmin}}" class="btn btn-navbar-muted">{{#t}}Cancel{{/t}}</a>
+      </div>
+    </form>
+  </main>
+</body>
+</html>
