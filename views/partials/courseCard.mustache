@@ -79,8 +79,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
               <div class="modal-body">
-                <input type="text" name="firstName" class="form-control mb-2" placeholder="{{#t}}First name{{/t}}" required>
-                <input type="text" name="lastName" class="form-control mb-2" placeholder="{{#t}}Last name{{/t}}" required>
+                 <input type="text" name="firstName" class="form-control mb-2" placeholder="{{#t}}First name{{/t}}" required
+                 pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+" title="{{#t}}Only letters, no spaces{{/t}}">
+                 <input type="text" name="lastName" class="form-control mb-2" placeholder="{{#t}}Last name{{/t}}" required
+                 pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+" title="{{#t}}Only letters, no spaces{{/t}}">
                 <input type="email" name="email" class="form-control mb-2" placeholder="{{#t}}Email{{/t}}" required>
                 <input type="tel" name="phone" class="form-control mb-2" placeholder="{{#t}}Phone{{/t}}" required pattern="[0-9]{6,15}">
               </div>
@@ -131,11 +133,24 @@
 
               {{^sessionUser}}
                 <hr>
-                <input type="text" name="firstName" class="form-control mb-2" placeholder="{{#t}}First name{{/t}}" required>
-                <input type="text" name="lastName" class="form-control mb-2" placeholder="{{#t}}Last name{{/t}}" required>
-                <input type="email" name="email" class="form-control mb-2" placeholder="{{#t}}Email{{/t}}" required>
-                <input type="tel" name="phone" class="form-control mb-2" placeholder="{{#t}}Phone{{/t}}" required pattern="[0-9]{6,15}">
+                <input type="text" name="firstName" class="form-control mb-2"
+                      placeholder="{{#t}}First name{{/t}}"
+                      required pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+"
+                      title="{{#t}}Only letters, no spaces{{/t}}">
+
+                <input type="text" name="lastName" class="form-control mb-2"
+                      placeholder="{{#t}}Last name{{/t}}"
+                      required pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+"
+                      title="{{#t}}Only letters, no spaces{{/t}}">
+
+                <input type="email" name="email" class="form-control mb-2"
+                      placeholder="{{#t}}Email{{/t}}" required>
+
+                <input type="tel" name="phone" class="form-control mb-2"
+                      placeholder="{{#t}}Phone{{/t}}" required
+                      pattern="[0-9]{6,15}">
               {{/sessionUser}}
+
             </div>
             <div class="modal-footer">
               <button type="submit" class="btn btn-navbar">{{#t}}Enroll{{/t}}</button>
