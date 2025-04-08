@@ -95,7 +95,7 @@ module.exports = {
   "User Panel": { en: "User Panel", pl: "Panel użytkownika" },
   "User not found": { en: "User not found", pl: "Nie znaleziono użytkownika" },
   "Username": { en: "Username", pl: "Nazwa użytkownika" },
-  "We offer a wide variety of dance classes — from weekly sessions to intensive weekend workshops. Our instructors will keep you smiling, fit and full of dancing energy!": { en: "We offer a wide variety of dance classes — from weekly sessions to intensive weekend workshops. Our instructors will keep you smiling, fit and full of dancing energy!", pl: "Oferujemy szeroki wybór kursów tańca — od cotygodniowych zajęć po intensywne warsztaty weekendowe. Nasi instruktorzy zadbają o Twój uśmiech, formę i taneczną energię!" },
+  "We offer a wide variety of dance classes — from weekly sessions to intensive weekend workshops. Our instructors will keep you smiling, fit and full of dancing energy!": { en: "We offer a wide variety of dance classes — from weekly sessions to intensive weekend workshops. Our instructors will keep you smiling, fit and full of dancing energy! People's Palace, The Grn, Glasgow G40 1AT", pl: "Oferujemy szeroki wybór kursów tańca — od cotygodniowych zajęć po intensywne warsztaty weekendowe. Nasi instruktorzy zadbają o Twój uśmiech, formę i taneczną energię! People's Palace, The Grn, Glasgow G40 1AT" },
   "Weekend Workshops": { en: "Weekend Workshops", pl: "Kursy weekendowe" },
   "Weekly Sessions": { en: "Weekly Sessions", pl: "Kursy regularne" },
   "Weekly courses": { en: "Weekly courses", pl: "Kursy cotygodniowe" },
