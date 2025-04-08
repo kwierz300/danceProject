@@ -10,7 +10,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "@seald-io/nedb": "^4.1.1",
     "bcryptjs": "^3.0.2",
@@ -20,5 +19,14 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kwierz300/danceProject.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kwierz300/danceProject/issues"
+  },
+  "homepage": "https://github.com/kwierz300/danceProject#readme",
+  "description": ""
 }

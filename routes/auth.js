@@ -26,9 +26,9 @@ router.post('/login', (req, res) => {
 
   // Walidacja pól
   if (!username || !password) {
-    loginLogsDB.insert({ username, success: false, reason: 'brak loginu lub hasła', time: new Date().toISOString() });
+    loginLogsDB.insert({ username, success: false, reason: 'Wrong login or Password', time: new Date().toISOString() });
     return res.render('login', {
-      errorMessage: 'Podaj login i hasło.',
+      errorMessage: 'Enter login and password',
       loginData: { username }
     });
   }
@@ -38,7 +38,7 @@ router.post('/login', (req, res) => {
   const now = Date.now();
   if (attempt && attempt.count >= LOGIN_ATTEMPT_LIMIT && now - attempt.time < LOCK_TIME_MINUTES * 60 * 1000) {
     return res.render('login', {
-      errorMessage: 'Zbyt wiele nieudanych prób. Spróbuj ponownie za 3 minuty.',
+      errorMessage: 'Too many failed attempts. Please try again in 3 minutes.',
       loginData: { username }
     });
   }
@@ -46,9 +46,9 @@ router.post('/login', (req, res) => {
   // Szukanie użytkownika w bazie
   usersDB.findOne({ username }, (err, user) => {
     if (err || !user) {
-      loginLogsDB.insert({ username, success: false, reason: 'nieprawidłowy login', time: new Date().toISOString() });
+      loginLogsDB.insert({ username, success: false, reason: 'Wrong login', time: new Date().toISOString() });
       return res.render('login', {
-        errorMessage: 'Nieprawidłowa nazwa użytkownika lub hasło.',
+        errorMessage: 'Incorrect username or password.',
         loginData: { username }
       });
     }
@@ -56,7 +56,7 @@ router.post('/login', (req, res) => {
     // Porównanie hasła
     bcrypt.compare(password, user.password, (err, match) => {
       if (!match) {
-        loginLogsDB.insert({ username, success: false, reason: 'nieprawidłowe hasło', time: new Date().toISOString() });
+        loginLogsDB.insert({ username, success: false, reason: 'Wrong password', time: new Date().toISOString() });
 
         // Liczenie prób nieudanego logowania
         if (!loginAttempts[username]) {
@@ -68,8 +68,8 @@ router.post('/login', (req, res) => {
 
         const attemptsLeft = LOGIN_ATTEMPT_LIMIT - loginAttempts[username].count;
         const message = attemptsLeft <= 0
-          ? 'Zbyt wiele nieudanych prób. Spróbuj ponownie za 3 minuty.'
-          : `Nieprawidłowe dane logowania. Pozostało prób: ${attemptsLeft}`;
+          ? 'Too many failed attempts. Please try again in 3 minutes.'
+          : `Invalid login details. Remaining attempts: ${attemptsLeft}`;
 
         return res.render('login', {
           errorMessage: message,
@@ -96,7 +96,6 @@ router.post('/login', (req, res) => {
         if (user.role === 'admin') return res.redirect('/admin');
         if (user.role === 'organiser') return res.redirect('/organiser');
         return res.redirect('/dashboard');
-
     });
   });
 });
@@ -110,7 +109,7 @@ router.post('/register', (req, res) => {
   // Sprawdzenie, czy wszystkie pola są wypełnione
   if (!firstName || !lastName || !username || !password || !phone || !email) {
     return res.render('login', {
-      errorMessage: 'Wszystkie pola są wymagane.',
+      errorMessage: 'All fields are required.',
       formData: { firstName, lastName, username, phone, email }
     });
   }
@@ -119,14 +118,14 @@ router.post('/register', (req, res) => {
   usersDB.findOne({ username }, (err, existingUser) => {
     if (existingUser) {
       return res.render('login', {
-        errorMessage: 'Nazwa użytkownika jest już zajęta.',
+        errorMessage: 'Username is already in use',
         formData: { firstName, lastName, username, phone, email }
       });
     }
 
     // Haszowanie hasła i zapis nowego użytkownika
     bcrypt.hash(password, 10, (err, hashedPassword) => {
-      if (err) return res.send('Błąd podczas tworzenia konta.');
+      if (err) return res.send('Error creating account.');
 
       const newUser = {
         firstName,
@@ -140,7 +139,7 @@ router.post('/register', (req, res) => {
       };
 
       usersDB.insert(newUser, (err, insertedUser) => {
-        if (err) return res.send('Błąd zapisu użytkownika.');
+        if (err) return res.send('User save error.');
 
         req.session.user = {
           username: insertedUser.username,
