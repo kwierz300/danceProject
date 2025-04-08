@@ -51,7 +51,7 @@ module.exports = {
   "Join our community and start your dance journey today!": { en: "Join our community and start your dance journey today!", pl: "Dołącz do naszej społeczności i rozpocznij swoją przygodę z tańcem już dziś!" },
   "Last Name": { en: "Last Name", pl: "Nazwisko" },
   "Last name": { en: "Last name", pl: "Nazwisko" },
-  "Level": { en: "Level", pl: "Poziom zaawansowania" },
+  "Level": { en: "Level", pl: "Poziom" },
   "Location": { en: "Location", pl: "Lokalizacja" },
   "Location:": { en: "Location:", pl: "Lokalizacja:" },
   "Log in": { en: "Log in", pl: "Zaloguj się" },
@@ -114,11 +114,6 @@ module.exports = {
 "Bachata": { en: "Bachata", pl: "Bachata" },
 "Zumba": { en: "Zumba", pl: "Zumba" },
 "Contemporary": { en: "Contemporary", pl: "Contemporary" },
-
-"Początkujący": { en: "Beginner", pl: "Początkujący" },
-"Średniozaawansowany": { en: "Intermediate", pl: "Średniozaawansowany" },
-"Zaawansowany": { en: "Advanced", pl: "Zaawansowany" },
-
 "Add new course": { en: "Add new course", pl: "Dodaj nowy kurs" },
 "Create course": { en: "Create course", pl: "Utwórz kurs" },
 "Actions": { en: "Actions", pl: "Akcje" },
@@ -141,9 +136,6 @@ module.exports = {
 "Edit course": { en: "Edit course", pl: "Edytuj kurs" },
 "Ballroom": { en: "Ballroom", pl: "Taniec towarzyski" },
 "Ballet": { en: "Ballet", pl: "Balet" },
-"Beginner": { en: "Beginner", pl: "Początkujący" },
-"Intermediate": { en: "Intermediate", pl: "Średniozaawansowany" },
-"Advanced": { en: "Advanced", pl: "Zaawansowany" },
 "Select level": { en: "Select level", pl: "Wybierz poziom" },
 "Add date": { en: "Add date", pl: "Dodaj datę zajęć" },
 "Are you sure you want to delete this course?": {
@@ -179,9 +171,20 @@ module.exports = {
   en: "No participants for this date.",
   pl: "Brak uczestników zapisanych na tę datę."
 },
-"Select another date": { en: "Select another date", pl: "Wybierz inną datę" }
-
-
+"Select another date": { en: "Select another date", pl: "Wybierz inną datę" },
+"My courses and sessions": { en: "My courses and sessions", pl: "Moje kursy i zajęcia" },
+"Enrolled courses": { en: "Enrolled courses", pl: "Zapisane kursy" },
+"Enrolled sessions (selected dates)": { en: "Enrolled sessions (selected dates)", pl: "Zapisane zajęcia (wybrane daty)" },
+"Title": { en: "Title", pl: "Tytuł" },
+"Action": { en: "Action", pl: "Akcja" },
+"Course type:": { en: "Course type:", pl: "Typ kursu:" },
+"Course style:": { en: "Course style:", pl: "Styl tańca:" },
+"Course level:": { en: "Course level:", pl: "Poziom zaawansowania:" },
+"Średniozaawansowany": { en: "Intermediate", pl: "Średniozaawansowany" },
+"Początkujący": { en: "Beginner", pl: "Początkujący" },
+"Zaawansowany": { en: "Advanced", pl: "Zaawansowany" },
+"Single Classes": { en: "Single Classes", pl: "Zajęcia jednorazowe" },
+"Weekend Workshop": { en: "Weekend Workshop", pl: "Warsztat weekendowy" }
 
 
 

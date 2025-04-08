@@ -264,9 +264,9 @@ router.get('/organiser/editCourse/:id', (req, res) => {
     // 🔽 Dodajemy pomocnicze flagi dla Mustache (bo nie obsługuje porównań)
     course.sessionsString = course.sessions.join(', ');
 
-    course.isLevelBeginner = course.level === 'Początkujący';
-    course.isLevelIntermediate = course.level === 'Średniozaawansowany';
-    course.isLevelAdvanced = course.level === 'Zaawansowany';
+    course.isLevelBeginner = course.level === 'Beginner';
+    course.isLevelIntermediate = course.level === 'Intermediate';
+    course.isLevelAdvanced = course.level === 'Advanced';
 
     course.isTypeWeekend = course.courseType === 'Weekend Workshop';
     course.isTypeWeekly = course.courseType === 'Weekly Sessions';
@@ -498,7 +498,6 @@ router.post('/organiser/course/:courseId/remove-participant-for-date', (req, res
     );
   });
 });
-
 
 
 module.exports = router;

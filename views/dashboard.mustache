@@ -104,9 +104,9 @@
               {{#fullCourses}}
                 <tr>
                   <td>{{title}}</td>
-                  <td>{{courseType}}</td>
+                  <td>{{#t}}{{courseType}}{{/t}}</td>
                   <td>{{style}}</td>
-                  <td>{{level}}</td>
+                  <td>{{#t}}{{level}}{{/t}}</td>
                   <td class="text-start">
                     {{#sessions}}
                       <div class="badge bg-navbar-date d-block mb-1">{{.}}</div>
@@ -143,9 +143,10 @@
                 {{#selectedDates}}
                   <tr>
                     <td>{{title}}</td>
-                    <td>{{courseType}}</td>
+                    <td>{{#t}}{{courseType}}{{/t}}</td>
                     <td>{{style}}</td>
-                    <td>{{level}}</td>
+                    <td>{{#t}}{{level}}{{/t}}</td>
+
                     <td>{{.}}</td>
                     <td>
                       <form method="POST" action="/dashboard/unenroll-partial/{{_id}}">

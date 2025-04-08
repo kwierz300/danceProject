@@ -24,9 +24,27 @@ router.get('/courses/weekly', (req, res) => {
 
     const enrichedCourses = courses.map(course => {
       const alreadyEnrolledFully = (course.participants || []).some(p => p.username === username);
+
+      // 🔁 Ustandaryzuj styl i poziom (do kluczy EN z translations.js)
+      const styleMap = {
+        "Balet": "Ballet",
+        "Taniec towarzyski": "Ballroom"
+      };
+
+      const levelMap = {
+        "Początkujący": "Beginner",
+        "Średniozaawansowany": "Intermediate",
+        "Zaawansowany": "Advanced"
+      };
+
+      const styleKey = styleMap[course.style] || course.style;
+      const levelKey = levelMap[course.level] || course.level;
+
       return {
         ...course,
-        alreadyEnrolledFully
+        alreadyEnrolledFully,
+        style: styleKey,
+        level: levelKey
       };
     });
 
@@ -58,9 +76,27 @@ router.get('/courses/other', (req, res) => {
 
     const enrichedCourses = filteredCourses.map(course => {
       const alreadyEnrolledFully = (course.participants || []).some(p => p.username === username);
+
+      // 🔁 Taka sama normalizacja jak wyżej
+      const styleMap = {
+        "Balet": "Ballet",
+        "Taniec towarzyski": "Ballroom"
+      };
+
+      const levelMap = {
+        "Początkujący": "Beginner",
+        "Średniozaawansowany": "Intermediate",
+        "Zaawansowany": "Advanced"
+      };
+
+      const styleKey = styleMap[course.style] || course.style;
+      const levelKey = levelMap[course.level] || course.level;
+
       return {
         ...course,
-        alreadyEnrolledFully
+        alreadyEnrolledFully,
+        style: styleKey,
+        level: levelKey
       };
     });
 
@@ -76,6 +112,7 @@ router.get('/courses/other', (req, res) => {
     });
   });
 });
+
 
 // 🔐 Zalogowany użytkownik – pełny zapis
 router.post('/courses/enrol/:id', (req, res) => {

@@ -4,14 +4,15 @@
       <!-- 🏷️ Course title -->
       <h5 class="card-title">
         <strong>{{title}}</strong>
-        <span class="text-muted d-block mt-1" style="font-size: 1rem;">({{#t}}{{style}}{{/t}}, {{#t}}{{level}}{{/t}})</span>
-
+      <span>{{#t}}{{style}}{{/t}}</span>
       </h5>
 
       <!-- 📚 Course details -->
-      <p><strong>{{#t}}Course type:{{/t}}</strong> {{courseType}}</p>
+      <p><strong>{{#t}}Course type:{{/t}}</strong> {{#t}}{{courseType}}{{/t}}</p>
+      <p><strong>{{#t}}Course level:{{/t}}</strong> {{#t}}{{level}}{{/t}}</p>
       <p><strong>{{#t}}Description:{{/t}}</strong> {{description}}</p>
       <p><strong>{{#t}}Total number of classes:{{/t}}</strong> {{totalClasses}}</p>
+
       <p>
         <strong>{{#t}}Sessions:{{/t}}</strong><br>
         {{#sessions}}
