@@ -38,7 +38,7 @@
       {{#isUser}}
         {{^alreadyEnrolledFully}}
           <button class="btn btn-navbar mt-auto mb-2" data-bs-toggle="modal" data-bs-target="#confirmModal-{{_id}}">
-            {{#t}}Enroll{{/t}}
+            {{#t}}Enroll for course{{/t}}
           </button>
         {{/alreadyEnrolledFully}}
       {{/isUser}}
@@ -69,7 +69,7 @@
       <!-- 👤 Guest reservation -->
       {{^sessionUser}}
         <button class="btn btn-outline-navbar mt-auto mb-2" data-bs-toggle="modal" data-bs-target="#guestModal-{{_id}}">
-          {{#t}}Enroll{{/t}}
+          {{#t}}Enroll for course{{/t}}
         </button>
 
         <div class="modal fade" id="guestModal-{{_id}}" tabindex="-1" aria-hidden="true">
@@ -126,6 +126,8 @@
                   <label class="form-check-label" for="session-{{.}}">{{.}}</label>
                 </div>
               {{/sessions}}
+              <!-- Ukryte wymagane pole do walidacji HTML -->
+              <input type="checkbox" id="atLeastOneSession" required style="position:absolute; opacity:0; height:0; margin:0; padding:0; border:0;">
 
               {{#isUser}}
                 <hr>

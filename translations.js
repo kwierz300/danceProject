@@ -35,7 +35,7 @@ module.exports = {
   "Edit your data": { en: "Edit your data", pl: "Edytuj swoje dane" },
   "Email": { en: "Email", pl: "Adres e-mail" },
   "Email address": { en: "Email address", pl: "Adres e-mail" },
-  "Enroll": { en: "Enroll", pl: "Zapisz się" },
+  "Enroll for course": { en: "Enroll for course", pl: "Zapisz się na kurs" },
   "Enroll for selected dates": { en: "Enroll for selected dates", pl: "Zapisz się na konkretne zajęcia" },
   "Enrollment for selected sessions successful": { en: "Enrollment for selected sessions successful!", pl: "Zapis na zajęcia został zrealizowany!" },
   "Enrollment successful": { en: "Enrollment successful!", pl: "Zapis został zrealizowany!" },
@@ -173,7 +173,7 @@ module.exports = {
 },
 "Select another date": { en: "Select another date", pl: "Wybierz inną datę" },
 "My courses and sessions": { en: "My courses and sessions", pl: "Moje kursy i zajęcia" },
-"Enrolled courses": { en: "Enrolled courses", pl: "Zapisane kursy" },
+"Enrolled course": { en: "Enrolled courses", pl: "Zapisane kursy" },
 "Enrolled sessions (selected dates)": { en: "Enrolled sessions (selected dates)", pl: "Zapisane zajęcia (wybrane daty)" },
 "Title": { en: "Title", pl: "Tytuł" },
 "Action": { en: "Action", pl: "Akcja" },
@@ -184,7 +184,10 @@ module.exports = {
 "Początkujący": { en: "Beginner", pl: "Początkujący" },
 "Zaawansowany": { en: "Advanced", pl: "Zaawansowany" },
 "Single Classes": { en: "Single Classes", pl: "Zajęcia jednorazowe" },
-"Weekend Workshop": { en: "Weekend Workshop", pl: "Warsztat weekendowy" }
+"Weekend Workshop": { en: "Weekend Workshop", pl: "Warsztat weekendowy" },
+
+"Please fill in all fields": { en: "Please fill in all fields", pl: "Proszę uzupełnić wszystkie pola" },
+"Message sent successfully": { en: "Message sent successfully", pl: "Wiadomość została wysłana pomyślnie" }
 
 
 

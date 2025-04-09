@@ -219,9 +219,10 @@ router.post('/courses/partial-enrol/:id', (req, res) => {
     ? req.body.selectedSessions
     : [req.body.selectedSessions];
 
-  if (!selectedSessions || selectedSessions.length === 0) {
-    return res.redirect(`/courses/weekly?error=${encodeURIComponent(t(req, 'No session dates selected'))}`);
-  }
+    if (!selectedSessions || selectedSessions.length === 0 || selectedSessions[0] === '') {
+      return res.redirect('/courses/weekly?error=' + encodeURIComponent(t(req, 'Fill in all fields')));
+    }
+    
 
   const isLoggedIn = !!req.session.user;
 
