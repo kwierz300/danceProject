@@ -14,19 +14,18 @@ const userRoutes = require('./routes/user');
 const coursesRoutes = require('./routes/courses');
 const contactRoutes = require('./routes/contact');
 
-
-// Import translation dictionary (to be created later)
+// Import translation dictionary 
 const translations = require('./translations'); 
 
 // ------------------- MIDDLEWARE ------------------- //
 
-// Parse form data
+// Parse form data from POST requests
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files (e.g., CSS, JS, images)
+// Serve static assets (CSS, JS, images)
 app.use(express.static('public'));
 
-// Configure session for login tracking and language preference
+// Configure session for user login and language preference
 app.use(session({
   secret: 'tajnyKod123',
   resave: false,
@@ -35,14 +34,14 @@ app.use(session({
   cookie: { sameSite: 'lax' }
 }));
 
-// Template engine configuration
+// Template engine setup (Mustache)
 app.engine('mustache', mustacheExpress(path.join(__dirname, 'views', 'partials')));
 app.set('view engine', 'mustache');
 app.set('views', path.join(__dirname, 'views'));
 
 // ------------------- LANGUAGE HANDLER ------------------- //
 
-// Set default language to English and provide translation function
+// Set default language and provide translation function to templates
 app.use((req, res, next) => {
   if (!req.session.language) {
     req.session.language = 'en';
@@ -50,7 +49,7 @@ app.use((req, res, next) => {
 
   res.locals.language = req.session.language;
 
-  // ✅ Translation function available in all templates
+  // Make translation helper function available in all templates
   res.locals.t = function () {
     return function (text, render) {
       const key = render(text);
@@ -61,8 +60,8 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // ------------------- GLOBAL TEMPLATE VARIABLES ------------------- //
+// Provide session and language-related data to all templates
 app.use((req, res, next) => {
   const user = req.session.user;
 
@@ -72,17 +71,14 @@ app.use((req, res, next) => {
   res.locals.isAdmin = user?.role === 'admin';
   res.locals.isOrganiser = user?.role === 'organiser';
   res.locals.isUser = user?.role === 'user';
-  
-  // Active language flags for navbar buttons
+
   res.locals.languageIsEnglish = req.session.language === 'en';
   res.locals.languageIsPolish = req.session.language === 'pl';
 
 
-  // Alert messages
   res.locals.successMessage = req.query.success || null;
   res.locals.errorMessage = req.query.error || null;
 
-  // Active page indicators for navbar
   res.locals.isActiveHome = req.path === '/';
   res.locals.isActiveCourses = req.path.startsWith('/courses');
   res.locals.isActiveLogin = req.path === '/login';
@@ -99,7 +95,6 @@ app.use((req, res, next) => {
 });
 
 // ------------------- ROUTES ------------------- //
-
 app.use('/admin', adminRoutes);
 app.use('/', authRoutes);
 app.use('/', organiserRoutes);
@@ -108,24 +103,21 @@ app.use('/', coursesRoutes);
 app.use('/contact', contactRoutes);
 
 // ------------------- HOME PAGE ------------------- //
-
 app.get('/', (req, res) => {
   res.render('home', {
-    title: 'Welcome to the Dance Course Booking System', // ✅ Default in English
+    title: 'Welcome to the Dance Course Booking System', // Default in English
     username: req.session.user?.username
   });
 });
 
+// Language switching handler
 app.post('/change-language', (req, res) => {
   const lang = req.body.lang;
   if (['en', 'pl'].includes(lang)) {
     req.session.language = lang;
   }
-
   res.redirect(req.get('Referrer') || '/');
 });
-
-
 
 // ------------------- SERVER START ------------------- //
 app.listen(PORT, '0.0.0.0', () => {

@@ -1,22 +1,24 @@
+<!-- Load main stylesheet -->
 <link rel="stylesheet" href="/style.css">
 
+<!-- Main navigation bar -->
 <nav class="navbar navbar-expand-lg custom-navbar shadow-sm py-3">
   <div class="container-fluid">
 
-    <!-- Logo / Nazwa -->
+    <!-- Logo or site name -->
     <span class="navbar-brand">BestDanceSchool</span>
 
-    <!-- Toggle dla widoku mobilnego -->
+    <!-- Mobile toggle button -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
       aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Cała zawartość menu -->
+    <!-- Main navigation menu -->
     <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
       <ul class="navbar-nav gap-4 fs-5 text-center flex-wrap">
 
-        <!-- Linki główne -->
+        <!-- General public links -->
         <li class="nav-item">
           <a class="nav-link {{#isActiveHome}}active{{/isActiveHome}}" href="/">{{#t}}Home{{/t}}</a>
         </li>
@@ -33,7 +35,7 @@
           <a class="nav-link {{#isActiveContact}}active{{/isActiveContact}}" href="/contact">{{#t}}Contact{{/t}}</a>
         </li>
 
-        <!-- Linki zależne od roli -->
+        <!-- Role-based navigation -->
         {{#sessionUser}}
           {{#isAdmin}}
             <li class="nav-item">
@@ -53,18 +55,20 @@
             </li>
           {{/isUser}}
 
+          <!-- Logout link with username -->
           <li class="nav-item">
             <a class="nav-link text-danger" href="/logout">{{#t}}Logout{{/t}} ({{username}})</a>
           </li>
         {{/sessionUser}}
 
+        <!-- Show login if not logged in -->
         {{^sessionUser}}
           <li class="nav-item">
             <a class="nav-link {{#isActiveLogin}}active{{/isActiveLogin}}" href="/login">{{#t}}Login{{/t}}</a>
           </li>
         {{/sessionUser}}
 
-        <!-- Przełączniki języka -->
+        <!-- Language switcher -->
         <li class="nav-item d-flex gap-2 align-items-center">
           <form action="/change-language" method="POST">
             <input type="hidden" name="lang" value="en">
@@ -82,4 +86,5 @@
   </div>
 </nav>
 
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
