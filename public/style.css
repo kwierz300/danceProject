@@ -1,4 +1,4 @@
-/* ========== Layout ogólny strony ========== */
+/* ========== General layout ========== */
 html, body {
   height: 100%;
   margin: 0;
@@ -58,7 +58,7 @@ main {
   color: #2c3e50;
 }
 
-/* ========== Stopka ========== */
+/* ========== Footer ========== */
 .footer {
   background-color: #2c3e50;
   color: #ffffff;
@@ -88,7 +88,7 @@ main {
   align-items: center;
 }
 
-/* ========== Tabele i dropdowny (admin/organiser/user) ========== */
+/* ========== Tables and dropdowns (admin/organiser/user) ========== */
 .table-section {
   margin-bottom: 3rem;
   overflow: visible !important;
@@ -170,7 +170,7 @@ td {
   position: static !important;
 }
 
-/* ========== Formularze (logowanie, kontakt, edycja, kursy) ========== */
+/* ========== Forms (login, contact, edit, course) ========== */
 .form-wrapper {
   max-width: 600px;
   margin: 0 auto;
@@ -194,7 +194,7 @@ td {
   margin: 0 auto;
 }
 
-/* ========== Przyciskowe style ========== */
+/* ========== Button styles ========== */
 .btn-navbar {
   background-color: #4a5a6a;
   color: #fff;
@@ -240,7 +240,7 @@ td {
   color: #2c3e50;
 }
 
-/* ========== Badge'y ========== */
+/* ========== Badges ========== */
 .bg-navbar-date {
   background-color: #4a5a6a;
   color: white;
@@ -256,10 +256,10 @@ td {
   margin-bottom: 0.2rem;
 }
 
-/* ========== Kursy (karty) ========== */
+/* ========== Course cards ========== */
 .row {
   row-gap: 2rem;
-  justify-content: center; /* <-- to centruje całość jeśli jest mniej kart */
+  justify-content: center; 
 }
 
 .course-card {
@@ -284,7 +284,7 @@ td {
   color: #34495e;
 }
 
-/* ========== HERO SECTION ========== */
+/* ========== Hero section ========== */
 .hero-section {
   position: relative;
   overflow: hidden;
@@ -305,7 +305,7 @@ td {
 
 .hero-text {
   position: absolute;
-  bottom: 30px; /* tekst na dole zdjęcia */
+  bottom: 30px; 
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
@@ -322,7 +322,7 @@ td {
   margin: 0;
 }
 
-/* Większa karta kursu */
+/* Larger course card */
 .course-card-lg {
   border-radius: 1.2rem;
   background-color: #ffffff;
@@ -337,7 +337,7 @@ td {
   margin-bottom: 1.2rem;
 }
 
-/* Nowy lekki styl przycisków */
+/* Outlined button style */
 .btn-outline-navbar {
   background-color: transparent;
   color: #4a5a6a;
@@ -353,10 +353,9 @@ td {
   color: #fff;
 }
 
-
-/* ========== MAIN WELCOME SECTION ========== */
+/* ========== Main welcome section ========== */
 .main-description {
-  padding: 1.5rem 1rem 1.5rem; /* zmniejszony padding z góry i dołu */
+  padding: 1.5rem 1rem 1.5rem; 
   text-align: center;
   background-color: #f9f9f9;
 }
@@ -371,7 +370,7 @@ td {
   letter-spacing: 0.3px;
 }
 
-/* ========== BUTTONS ========== */
+/* ========== Homepage buttons ========== */
 .main-buttons {
   gap: 1rem;
   flex-wrap: wrap;

@@ -3,29 +3,26 @@
 const Datastore = require('@seald-io/nedb');
 const bcrypt = require('bcryptjs');
 
+// Initialize the users database
 const usersDB = new Datastore({ filename: 'db/users.db', autoload: true });
 
-/**
- * ✅ Jednorazowe tworzenie konta administratora (jeśli nie istnieje)
- * Hasło spełnia wymagania: min. 8 znaków, wielka i mała litera, cyfra, znak specjalny
- * Login: admin | Hasło: Admin123!
- */
+// Create the default admin account if it doesn't exist
 usersDB.findOne({ username: 'admin' }, (err, existingAdmin) => {
   if (err) {
-    return console.error('❌ Błąd odczytu bazy użytkowników:', err);
+    return console.error('Error reading users database:', err);
   }
 
   if (!existingAdmin) {
-    const adminPassword = 'Admin123!'; // Silne hasło (zgodne z walidacją)
+    const adminPassword = 'Admin123!'; // Strong password matching validation rules
 
     bcrypt.hash(adminPassword, 10, (err, hashedPassword) => {
       if (err) {
-        return console.error('❌ Błąd przy haszowaniu hasła admina:', err);
+        return console.error('Error hashing admin password:', err);
       }
 
       const adminUser = {
         firstName: 'Admin',
-        lastName: 'Główny',
+        lastName: 'Main',
         username: 'admin',
         password: hashedPassword,
         role: 'admin',
@@ -36,13 +33,14 @@ usersDB.findOne({ username: 'admin' }, (err, existingAdmin) => {
 
       usersDB.insert(adminUser, (err) => {
         if (!err) {
-          console.log('✔️ Konto administratora utworzone (admin Admin123! — zmień hasło po pierwszym logowaniu)');
+          console.log('Admin account created (login: admin, password: Admin123!) — please change the password after first login');
         } else {
-          console.error('❌ Błąd przy zapisie konta administratora:', err);
+          console.error('Error creating admin account:', err);
         }
       });
     });
   }
 });
 
+// Export the database instance
 module.exports = usersDB;
