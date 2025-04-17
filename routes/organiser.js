@@ -52,7 +52,7 @@ router.get('/organiser', (req, res) => {
   });
 });
 
-// ---------------- User edit form ----------------
+//  User edit form 
 router.get('/organiser/edit/:id', (req, res) => {
   usersDB.findOne({ _id: req.params.id }, (err, user) => {
     if (err || !user || user.role !== 'user') {
@@ -66,7 +66,7 @@ router.get('/organiser/edit/:id', (req, res) => {
   });
 });
 
-// ---------------- Save edited user data ----------------
+//  Save edited user data 
 router.post('/organiser/edit/:id', (req, res) => {
   const userId = req.params.id;
   const { firstName, lastName, username, email, phone } = req.body;
@@ -100,7 +100,7 @@ router.post('/organiser/edit/:id', (req, res) => {
   });
 });
 
-// ---------------- User deletion ----------------
+//  User deletion 
 router.post('/organiser/delete/:id', (req, res) => {
   usersDB.findOne({ _id: req.params.id }, (err, user) => {
     if (!user || user.role !== 'user') {
@@ -113,7 +113,7 @@ router.post('/organiser/delete/:id', (req, res) => {
   });
 });
 
-// ---------------- Password reset ----------------
+//  Password reset 
 router.post('/organiser/reset-password/:id', (req, res) => {
   const userId = req.params.id;
   const { newPassword, confirmPassword } = req.body;

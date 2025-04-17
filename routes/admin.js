@@ -1,11 +1,11 @@
-// ======================= IMPORTS =======================
+//  IMPORTS 
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const usersDB = require('../db/usersDB');
 const { t } = require('../translations');
 
-// ======================= ADMIN PANEL =======================
+//  ADMIN PANEL 
 
 // GET: Admin panel – list of users with sorting and filtering
 router.get('/', (req, res) => {
@@ -67,7 +67,7 @@ router.get('/', (req, res) => {
   });
 });
 
-// ======================= USER DATA EDITING =======================
+//  USER DATA EDITING 
 
 // GET: Edit user form
 router.get('/edit/:id', (req, res) => {
@@ -128,7 +128,7 @@ router.post('/edit/:id', (req, res) => {
   });
 });
 
-// ======================= ROLE MANAGEMENT =======================
+//  ROLE MANAGEMENT 
 
 // POST: Toggle user role between 'user' and 'organiser'
 router.post('/toggle-role/:id', (req, res) => {
@@ -147,7 +147,7 @@ router.post('/toggle-role/:id', (req, res) => {
   });
 });
 
-// ======================= USER DELETION =======================
+//  USER DELETION 
 
 // POST: Delete user (excluding admins)
 router.post('/delete/:id', (req, res) => {
@@ -164,7 +164,7 @@ router.post('/delete/:id', (req, res) => {
   });
 });
 
-// ======================= ADMIN PROMOTION/DEMOTION =======================
+//  ADMIN PROMOTION/DEMOTION 
 
 // POST: Promote user to admin (requires admin password)
 router.post('/make-admin/:id', (req, res) => {
@@ -220,7 +220,7 @@ router.post('/demote/:id', (req, res) => {
   });
 });
 
-// ======================= PASSWORD RESET =======================
+//  PASSWORD RESET 
 
 // POST: Reset password by admin (including self, with confirmation)
 router.post('/reset-password/:id', (req, res) => {
@@ -267,5 +267,5 @@ router.post('/reset-password/:id', (req, res) => {
   });
 });
 
-// ======================= EXPORT =======================
+//  EXPORT 
 module.exports = router;

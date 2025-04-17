@@ -3,14 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <title>{{#t}}User Panel{{/t}}</title>
+
+  <!-- Bootstrap & custom styles -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
   <div id="page-wrapper">
+    <!-- Navigation bar -->
     {{> navbar}}
 
     <main class="container mt-5">
+      <!-- Success / error messages -->
       {{#successMessage}}
         <div class="alert alert-success text-center">{{successMessage}}</div>
       {{/successMessage}}
@@ -19,47 +24,59 @@
         <div class="alert alert-danger text-center">{{errorMessage}}</div>
       {{/errorMessage}}
 
+      <!-- Dashboard header -->
       <h1 class="mb-4 text-center">{{#t}}User Panel{{/t}}</h1>
       <p class="text-center">{{#t}}Logged in as:{{/t}} <strong>{{username}}</strong></p>
       <hr>
 
+      <!-- Edit user details -->
       <h4 class="mb-3 text-navbar text-center">{{#t}}Edit your data{{/t}}</h4>
       <form method="POST" action="/dashboard/edit" class="form-wrapper">
+        <!-- First name -->
         <div class="mb-3">
           <label class="form-label">{{#t}}First name{{/t}}</label>
           <input type="text" class="form-control" name="firstName"
-                 value="{{formData.firstName}}{{^formData.firstName}}{{user.firstName}}{{/formData.firstName}}" required
-                 pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\s]+" title="{{#t}}Only letters are allowed{{/t}}">
+                 value="{{formData.firstName}}{{^formData.firstName}}{{user.firstName}}{{/formData.firstName}}"
+                 required pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\s]+"
+                 title="{{#t}}Only letters are allowed{{/t}}">
         </div>
 
+        <!-- Last name -->
         <div class="mb-3">
           <label class="form-label">{{#t}}Last name{{/t}}</label>
           <input type="text" class="form-control" name="lastName"
-                 value="{{formData.lastName}}{{^formData.lastName}}{{user.lastName}}{{/formData.lastName}}" required
-                 pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\s]+" title="{{#t}}Only letters are allowed{{/t}}">
+                 value="{{formData.lastName}}{{^formData.lastName}}{{user.lastName}}{{/formData.lastName}}"
+                 required pattern="[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ\s]+"
+                 title="{{#t}}Only letters are allowed{{/t}}">
         </div>
 
+        <!-- Username -->
         <div class="mb-3">
           <label class="form-label">{{#t}}Username{{/t}}</label>
           <input type="text" class="form-control" name="username"
-                 value="{{formData.username}}{{^formData.username}}{{user.username}}{{/formData.username}}" required
-                 pattern="[a-zA-Z0-9]+" title="{{#t}}Only letters and numbers{{/t}}">
+                 value="{{formData.username}}{{^formData.username}}{{user.username}}{{/formData.username}}"
+                 required pattern="[a-zA-Z0-9]+"
+                 title="{{#t}}Only letters and numbers{{/t}}">
         </div>
 
+        <!-- Email -->
         <div class="mb-3">
           <label class="form-label">{{#t}}Email address{{/t}}</label>
           <input type="email" class="form-control" name="email"
-                 value="{{formData.email}}{{^formData.email}}{{user.email}}{{/formData.email}}" required
-                 title="{{#t}}Enter a valid email{{/t}}">
+                 value="{{formData.email}}{{^formData.email}}{{user.email}}{{/formData.email}}"
+                 required title="{{#t}}Enter a valid email{{/t}}">
         </div>
 
+        <!-- Phone -->
         <div class="mb-3">
           <label class="form-label">{{#t}}Phone number{{/t}}</label>
           <input type="tel" class="form-control" name="phone"
-                 value="{{formData.phone}}{{^formData.phone}}{{user.phone}}{{/formData.phone}}" required
-                 pattern="[0-9]{6,15}" title="{{#t}}Digits only{{/t}}">
+                 value="{{formData.phone}}{{^formData.phone}}{{user.phone}}{{/formData.phone}}"
+                 required pattern="[0-9]{6,15}"
+                 title="{{#t}}Digits only{{/t}}">
         </div>
 
+        <!-- Submit button -->
         <div class="d-flex justify-content-center gap-3 mt-3">
           <button type="submit" class="btn btn-navbar">{{#t}}Save changes{{/t}}</button>
         </div>
@@ -67,15 +84,18 @@
 
       <hr class="my-5">
 
+      <!-- Change password -->
       <h4 class="mb-3 text-navbar text-center">{{#t}}Change password{{/t}}</h4>
       <form method="POST" action="/dashboard/reset-password" class="form-wrapper">
         <div class="mb-3">
           <label class="form-label">{{#t}}New password{{/t}}</label>
-          <input type="password" class="form-control" name="newPassword" required minlength="8" placeholder="{{#t}}Min. 8 characters{{/t}}">
+          <input type="password" class="form-control" name="newPassword" required minlength="8"
+                 placeholder="{{#t}}Min. 8 characters{{/t}}">
         </div>
         <div class="mb-3">
           <label class="form-label">{{#t}}Confirm current password{{/t}}</label>
-          <input type="password" class="form-control" name="confirmPassword" required placeholder="{{#t}}Your current password{{/t}}">
+          <input type="password" class="form-control" name="confirmPassword" required
+                 placeholder="{{#t}}Your current password{{/t}}">
         </div>
         <div class="d-flex justify-content-center gap-3 mt-3">
           <button type="submit" class="btn btn-navbar-alt">{{#t}}Change password{{/t}}</button>
@@ -84,6 +104,7 @@
 
       <hr class="my-5">
 
+      <!-- List of enrolled full courses -->
       <h4 class="mb-3 text-navbar text-center">{{#t}}My courses and sessions{{/t}}</h4>
 
       {{#fullCourses.length}}
@@ -124,6 +145,7 @@
         </div>
       {{/fullCourses.length}}
 
+      <!-- List of enrolled single sessions -->
       {{#partialCourses.length}}
         <h5 class="mt-4">{{#t}}Enrolled sessions (selected dates){{/t}}</h5>
         <div class="table-section">
@@ -146,7 +168,6 @@
                     <td>{{#t}}{{courseType}}{{/t}}</td>
                     <td>{{style}}</td>
                     <td>{{#t}}{{level}}{{/t}}</td>
-
                     <td>{{.}}</td>
                     <td>
                       <form method="POST" action="/dashboard/unenroll-partial/{{_id}}">
@@ -162,15 +183,20 @@
         </div>
       {{/partialCourses.length}}
 
+      <!-- If no enrolled courses -->
       {{^fullCourses.length}}{{^partialCourses.length}}
         <p class="text-muted">{{#t}}You are not enrolled in any courses or sessions.{{/t}}</p>
       {{/partialCourses.length}}{{/fullCourses.length}}
     </main>
 
+    <!-- Footer -->
     {{> footer }}
   </div>
 
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Auto-hide alerts -->
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {

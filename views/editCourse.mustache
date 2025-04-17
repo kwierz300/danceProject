@@ -3,23 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <title>{{#t}}Edit course{{/t}}</title>
+
+  <!-- Bootstrap & custom styles -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="/style.css" rel="stylesheet">
 </head>
+
 <body>
+  <!-- Navigation -->
   {{> navbar }}
 
   <main class="container mt-5">
+    <!-- Page heading -->
     <h1 class="mb-4 text-center">{{#t}}Edit course{{/t}}: {{course.title}}</h1>
 
+    <!-- Edit course form -->
     <form method="POST" action="/organiser/editCourse/{{course._id}}" class="form-wrapper">
       <input type="hidden" name="returnTo" value="{{returnTo}}">
 
+      <!-- Course title -->
       <div class="mb-3">
         <label class="form-label">{{#t}}Course title{{/t}}</label>
         <input type="text" class="form-control" name="title" value="{{course.title}}" required>
       </div>
 
+      <!-- Dance style -->
       <div class="mb-3">
         <label class="form-label">{{#t}}Style{{/t}}</label>
         <select name="style" class="form-select" required>
@@ -36,6 +44,7 @@
         </select>
       </div>
 
+      <!-- Course level -->
       <div class="mb-3">
         <label class="form-label">{{#t}}Level{{/t}}</label>
         <select class="form-select" name="level" required>
@@ -46,16 +55,19 @@
         </select>
       </div>
 
+      <!-- Course description -->
       <div class="mb-3">
         <label class="form-label">{{#t}}Description{{/t}}</label>
         <textarea class="form-control" name="description" required>{{course.description}}</textarea>
       </div>
 
+      <!-- Location -->
       <div class="mb-3">
         <label class="form-label">{{#t}}Location{{/t}}</label>
         <input type="text" class="form-control" name="location" value="{{course.location}}" required>
       </div>
 
+      <!-- Pricing -->
       <div class="mb-3">
         <label class="form-label">{{#t}}Full price{{/t}}</label>
         <input type="number" class="form-control" name="fullPrice" value="{{course.fullPrice}}" required min="0">
@@ -66,21 +78,25 @@
         <input type="number" class="form-control" name="singlePrice" value="{{course.singlePrice}}" required min="0">
       </div>
 
+      <!-- Capacity -->
       <div class="mb-3">
         <label class="form-label">{{#t}}Capacity{{/t}}</label>
         <input type="number" class="form-control" name="capacity" value="{{course.capacity}}" required min="1">
       </div>
 
+      <!-- Number of classes -->
       <div class="mb-3">
         <label class="form-label">{{#t}}Total number of classes:{{/t}}</label>
         <input type="number" class="form-control" name="totalClasses" value="{{course.totalClasses}}" required min="1">
       </div>
 
+      <!-- Duration -->
       <div class="mb-3">
         <label class="form-label">{{#t}}Duration{{/t}} ({{#t}}minutes{{/t}})</label>
         <input type="number" class="form-control" name="duration" value="{{course.duration}}" required min="15" step="15">
       </div>
 
+      <!-- Course type -->
       <div class="mb-3">
         <label class="form-label">{{#t}}Course type:{{/t}}</label>
         <select name="courseType" class="form-select" required>
@@ -90,6 +106,7 @@
         </select>
       </div>
 
+      <!-- Course session dates -->
       <div class="mb-3">
         <label class="form-label">{{#t}}Dates{{/t}}:</label>
         <div id="sessionsContainer">
@@ -102,6 +119,7 @@
         </div>
         <button type="button" id="addSession" class="btn btn-navbar-alt mb-3">{{#t}}Add date{{/t}}</button>
 
+        <!-- Form action buttons -->
         <div class="d-flex gap-3 justify-content-center mt-4">
           <button type="submit" class="btn btn-navbar">{{#t}}Save changes{{/t}}</button>
           <a href="{{returnTo}}" class="btn btn-navbar-muted">{{#t}}Cancel{{/t}}</a>
@@ -110,7 +128,10 @@
 
     <hr class="my-5">
 
-    <form method="POST" action="/organiser/delete-course/{{course._id}}" onsubmit="return confirm('{{#t}}Are you sure you want to delete this course?{{/t}}')" class="form-wrapper mt-4">
+    <!-- Delete course form -->
+    <form method="POST" action="/organiser/delete-course/{{course._id}}" 
+          onsubmit="return confirm('{{#t}}Are you sure you want to delete this course?{{/t}}')" 
+          class="form-wrapper mt-4">
       <h4 class="text-danger">{{#t}}Delete course{{/t}}</h4>
       <div class="mb-3">
         <label class="form-label">{{#t}}Confirm password{{/t}}</label>
@@ -120,6 +141,7 @@
     </form>
   </main>
 
+  <!-- JS for dynamic session field handling -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const container = document.getElementById('sessionsContainer');

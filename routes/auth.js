@@ -1,16 +1,16 @@
-// ======================= IMPORTS =======================
+//  IMPORTS 
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const usersDB = require('../db/usersDB');
 const loginLogsDB = require('../db/loginLogsDB');
 
-// ======================= LOGIN ATTEMPT LIMIT CONFIG =======================
+//  LOGIN ATTEMPT LIMIT CONFIG 
 const LOGIN_ATTEMPT_LIMIT = 5;
 const LOCK_TIME_MINUTES = 3;
 const loginAttempts = {}; 
 
-// ======================= LOGIN =======================
+//  LOGIN 
 
 // GET: Login and registration form
 router.get('/login', (req, res) => {
@@ -100,7 +100,7 @@ router.post('/login', (req, res) => {
   });
 });
 
-// ======================= REGISTRATION =======================
+//  REGISTRATION 
 
 // POST: Handle user registration
 router.post('/register', (req, res) => {
@@ -152,7 +152,7 @@ router.post('/register', (req, res) => {
   });
 });
 
-// ======================= LOGOUT =======================
+//  LOGOUT 
 
 // GET: Log out the user
 router.get('/logout', (req, res) => {
@@ -161,5 +161,5 @@ router.get('/logout', (req, res) => {
   });
 });
 
-// ======================= EXPORT ROUTER =======================
+//  EXPORT ROUTER 
 module.exports = router;

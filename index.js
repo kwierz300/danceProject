@@ -1,4 +1,4 @@
-// ------------------- IMPORTS & CONFIGURATION ------------------- //
+//  IMPORTS & CONFIGURATION  //
 const express = require('express');
 const mustacheExpress = require('mustache-express');
 const path = require('path');
@@ -17,7 +17,7 @@ const contactRoutes = require('./routes/contact');
 // Import translation dictionary 
 const translations = require('./translations'); 
 
-// ------------------- MIDDLEWARE ------------------- //
+//  MIDDLEWARE  //
 
 // Parse form data from POST requests
 app.use(express.urlencoded({ extended: true }));
@@ -39,7 +39,7 @@ app.engine('mustache', mustacheExpress(path.join(__dirname, 'views', 'partials')
 app.set('view engine', 'mustache');
 app.set('views', path.join(__dirname, 'views'));
 
-// ------------------- LANGUAGE HANDLER ------------------- //
+//  LANGUAGE HANDLER  //
 
 // Set default language and provide translation function to templates
 app.use((req, res, next) => {
@@ -60,7 +60,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ------------------- GLOBAL TEMPLATE VARIABLES ------------------- //
+//  GLOBAL TEMPLATE VARIABLES  //
 // Provide session and language-related data to all templates
 app.use((req, res, next) => {
   const user = req.session.user;
@@ -94,7 +94,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ------------------- ROUTES ------------------- //
+//  ROUTES  //
 app.use('/admin', adminRoutes);
 app.use('/', authRoutes);
 app.use('/', organiserRoutes);
@@ -102,7 +102,7 @@ app.use('/', userRoutes);
 app.use('/', coursesRoutes);
 app.use('/contact', contactRoutes);
 
-// ------------------- HOME PAGE ------------------- //
+//  HOME PAGE  //
 app.get('/', (req, res) => {
   res.render('home', {
     title: 'Welcome to the Dance Course Booking System', // Default in English
@@ -119,7 +119,7 @@ app.post('/change-language', (req, res) => {
   res.redirect(req.get('Referrer') || '/');
 });
 
-// ------------------- SERVER START ------------------- //
+//  SERVER START  //
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });

@@ -1,12 +1,12 @@
 // routes/user.js
-// ---------------------- IMPORTS & CONFIG ---------------------- //
+//  IMPORTS & CONFIG  //
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const usersDB = require('../db/usersDB');
 const coursesDB = require('../db/coursesDB'); 
 
-// -------------------- USER DASHBOARD -------------------- //
+//  USER DASHBOARD  //
 router.get('/dashboard', (req, res) => {
   if (!req.session.user || req.session.user.role !== 'user') {
     return res.status(403).send('<h2>Access denied</h2>');
@@ -62,7 +62,7 @@ router.get('/dashboard', (req, res) => {
   });
 });
 
-// ---------------------- PROFILE DATA UPDATE ---------------------- //
+//  PROFILE DATA UPDATE  //
 // POST /dashboard/edit – update user profile data
 router.post('/dashboard/edit', (req, res) => {
   const { firstName, lastName, username, email, phone } = req.body;
@@ -103,7 +103,7 @@ router.post('/dashboard/edit', (req, res) => {
   });
 });
 
-// ---------------------- PASSWORD CHANGE ---------------------- //
+//  PASSWORD CHANGE  //
 // POST /dashboard/reset-password – change user password
 router.post('/dashboard/reset-password', (req, res) => {
   const { newPassword, confirmPassword } = req.body;
@@ -139,7 +139,7 @@ router.post('/dashboard/reset-password', (req, res) => {
   });
 });
 
-// ---------------------- UNENROLL FROM COURSE (FULL) ---------------------- //
+//  UNENROLL FROM COURSE (FULL)  //
 // POST /dashboard/unenroll-full/:courseId – remove user from full course
 router.post('/dashboard/unenroll-full/:courseId', (req, res) => {
   const courseId = req.params.courseId;
@@ -158,7 +158,7 @@ router.post('/dashboard/unenroll-full/:courseId', (req, res) => {
   );
 });
 
-// ---------------------- UNENROLL FROM SINGLE SESSION ---------------------- //
+//  UNENROLL FROM SINGLE SESSION  //
 // POST /dashboard/unenroll-partial/:courseId – remove selected date
 router.post('/dashboard/unenroll-partial/:courseId', (req, res) => {
   const courseId = req.params.courseId;
