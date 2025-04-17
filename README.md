@@ -112,16 +112,16 @@ http://localhost:3000
 To help with testing, the following accounts have been created:
 
 ### Regular User
-- **Username:** `user1`
-- **Password:** `user123!`
+- **Username:** `User1`
+- **Password:** `User11!!`
 
 ### Organiser
-- **Username:** `organiser1`
-- **Password:** `org123!`
+- **Username:** `Fsmith`
+- **Password:** `Bobek123!!`
 
 ### Administrator
 - **Username:** `admin`
-- **Password:** `admin123!`
+- **Password:** `Admin123!!`
  
 ## Known Issues
 
