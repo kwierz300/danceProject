@@ -1,44 +1,42 @@
 // routes/user.js
-// ---------------------- IMPORTY I KONFIGURACJA ---------------------- //
+// ---------------------- IMPORTS & CONFIG ---------------------- //
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const usersDB = require('../db/usersDB');
-const coursesDB = require('../db/coursesDB'); // ❗ wymagane do pobierania zapisów użytkownika
+const coursesDB = require('../db/coursesDB'); 
 
-// -------------------- PANEL UŻYTKOWNIKA -------------------- //
-// routes/user.js 
+// -------------------- USER DASHBOARD -------------------- //
 router.get('/dashboard', (req, res) => {
   if (!req.session.user || req.session.user.role !== 'user') {
-    return res.status(403).send('<h2>Brak dostępu</h2>');
+    return res.status(403).send('<h2>Access denied</h2>');
   }
 
   const username = req.session.user.username;
 
   usersDB.findOne({ username }, (err, user) => {
-    if (err || !user) return res.send('Błąd podczas ładowania danych');
+    if (err || !user) return res.send('Error loading user data');
 
     coursesDB.find({}, (err, allCourses) => {
-      if (err) return res.send('Błąd podczas ładowania kursów');
+      if (err) return res.send('Error loading courses');
 
-      // 🔹 Kursy zapisane w całości
+      // Fully enrolled courses
       const fullCourses = allCourses
-      .filter(c => (c.participants || []).some(p => p.username === username))
-      .map(c => ({
-        _id: c._id,
-        title: c.title,
-        courseType: c.courseType,
-        style: c.style,
-        level: c.level,
-        sessions: c.sessions, // ⬅️ dodaj to
-      }));
-    
+        .filter(c => (c.participants || []).some(p => p.username === username))
+        .map(c => ({
+          _id: c._id,
+          title: c.title,
+          courseType: c.courseType,
+          style: c.style,
+          level: c.level,
+          sessions: c.sessions,
+        }));
 
-      // 🔹 Kursy z zapisanymi datami
+      // Courses with selected sessions
       const partialCourses = [];
 
       allCourses.forEach(course => {
-        const courseTitle = course.title || '[brak tytułu]'; // na wypadek gdyby brakowało
+        const courseTitle = course.title || '[no title]';
 
         (course.partialParticipants || []).forEach(p => {
           if (p.username === username && Array.isArray(p.selectedDates)) {
@@ -54,7 +52,6 @@ router.get('/dashboard', (req, res) => {
         });
       });
 
-
       res.render('dashboard', {
         username: user.username,
         user,
@@ -65,34 +62,34 @@ router.get('/dashboard', (req, res) => {
   });
 });
 
-// ---------------------- EDYCJA DANYCH PROFILU ---------------------- //
-// POST /dashboard/edit – aktualizacja danych użytkownika
+// ---------------------- PROFILE DATA UPDATE ---------------------- //
+// POST /dashboard/edit – update user profile data
 router.post('/dashboard/edit', (req, res) => {
   const { firstName, lastName, username, email, phone } = req.body;
   const currentUser = req.session.user;
 
-  // 🛑 Walidacja pól formularza
+  // Validate form fields
   if (!firstName || !lastName || !username || !email || !phone) {
-    return res.redirect('/dashboard?error=Uzupełnij+wszystkie+pola.');
+    return res.redirect('/dashboard?error=Please+fill+in+all+fields.');
   }
 
-  // 🔍 Sprawdzenie, czy nowy login nie jest już zajęty przez innego użytkownika
+  // Check if the new username is already taken by another user
   usersDB.findOne({ username }, (err, existingUser) => {
     if (existingUser && existingUser.username !== currentUser.username) {
-      return res.redirect('/dashboard?error=Taki+login+już+istnieje.');
+      return res.redirect('/dashboard?error=This+username+is+already+taken.');
     }
 
-    // ✅ Aktualizacja danych
+    // Update user data
     usersDB.update(
       { username: currentUser.username },
       { $set: { firstName, lastName, username, email, phone } },
       {},
       (err, numReplaced) => {
         if (err || numReplaced === 0) {
-          return res.redirect('/dashboard?error=Nie+udało+się+zaktualizować+danych.');
+          return res.redirect('/dashboard?error=Failed+to+update+data.');
         }
 
-        // 🔁 Aktualizacja sesji użytkownika
+        // Update session
         req.session.user = {
           ...req.session.user,
           username,
@@ -100,80 +97,81 @@ router.post('/dashboard/edit', (req, res) => {
           lastName
         };
 
-        return res.redirect('/dashboard?success=Dane+zostały+zaktualizowane.');
+        return res.redirect('/dashboard?success=Data+updated+successfully.');
       }
     );
   });
 });
 
-// ---------------------- ZMIANA HASŁA ---------------------- //
-// POST /dashboard/reset-password – zmiana hasła użytkownika
+// ---------------------- PASSWORD CHANGE ---------------------- //
+// POST /dashboard/reset-password – change user password
 router.post('/dashboard/reset-password', (req, res) => {
   const { newPassword, confirmPassword } = req.body;
   const userId = req.session.user._id;
 
-  // 🛑 Sprawdzenie długości nowego hasła
+  // Check password length
   if (!newPassword || newPassword.length < 8) {
-    return res.redirect('/dashboard?error=Nowe+hasło+jest+za+krótkie.');
+    return res.redirect('/dashboard?error=Password+too+short.');
   }
 
-  // 🔍 Pobranie użytkownika z bazy
+  // Fetch user from DB
   usersDB.findOne({ _id: userId }, (err, user) => {
     if (!user) {
-      return res.redirect('/dashboard?error=Nie+znaleziono+użytkownika.');
+      return res.redirect('/dashboard?error=User+not+found.');
     }
 
-    // 🔐 Sprawdzenie aktualnego hasła
+    // Verify current password
     bcrypt.compare(confirmPassword, user.password, (err, match) => {
       if (!match) {
-        return res.redirect('/dashboard?error=Niepoprawne+aktualne+hasło.');
+        return res.redirect('/dashboard?error=Incorrect+current+password.');
       }
 
-      // 🔒 Hashowanie nowego hasła i aktualizacja w bazie
+      // Hash new password and update
       bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
         usersDB.update(
           { _id: userId },
           { $set: { password: hashedPassword } },
           {},
-          () => res.redirect('/dashboard?success=Hasło+zostało+zmienione.')
+          () => res.redirect('/dashboard?success=Password+changed+successfully.')
         );
       });
     });
   });
 });
 
-// POST: Wypisz się z całego kursu
+// ---------------------- UNENROLL FROM COURSE (FULL) ---------------------- //
+// POST /dashboard/unenroll-full/:courseId – remove user from full course
 router.post('/dashboard/unenroll-full/:courseId', (req, res) => {
   const courseId = req.params.courseId;
   const username = req.session.user?.username;
 
-  if (!username) return res.redirect('/dashboard?error=Nie+zalogowano');
+  if (!username) return res.redirect('/dashboard?error=Not+logged+in');
 
   coursesDB.update(
     { _id: courseId },
     { $pull: { participants: { username } } },
     {},
     (err) => {
-      if (err) return res.redirect('/dashboard?error=Nie+udało+się+wypisać+z+kursu');
-      res.redirect('/dashboard?success=Wypisano+z+kursu');
+      if (err) return res.redirect('/dashboard?error=Failed+to+unenroll+from+course');
+      res.redirect('/dashboard?success=Unenrolled+from+course');
     }
   );
 });
 
-// POST: Wypisanie z pojedynczych zajęć (wybrana data)
-// POST: Wypisanie z pojedynczej daty zajęć
+// ---------------------- UNENROLL FROM SINGLE SESSION ---------------------- //
+// POST /dashboard/unenroll-partial/:courseId – remove selected date
 router.post('/dashboard/unenroll-partial/:courseId', (req, res) => {
   const courseId = req.params.courseId;
   const selectedDate = req.body.date;
   const username = req.session.user?.username;
 
   if (!username || !selectedDate) {
-    return res.redirect('/dashboard?error=Brak+danych+do+wypisania.');
+    return res.redirect('/dashboard?error=Missing+data+to+unenroll.');
   }
 
   coursesDB.findOne({ _id: courseId }, (err, course) => {
     if (err || !course) {
-      return res.redirect('/dashboard?error=Nie+znaleziono+kursu.');
+      return res.redirect('/dashboard?error=Course+not+found.');
     }
 
     const updatedList = (course.partialParticipants || []).map(p => {
@@ -184,7 +182,7 @@ router.post('/dashboard/unenroll-partial/:courseId', (req, res) => {
         };
       }
       return p;
-    }).filter(p => p.selectedDates.length > 0); // usuwa całkowicie, jeśli nie ma już dat
+    }).filter(p => p.selectedDates.length > 0); // remove if no remaining dates
 
     coursesDB.update(
       { _id: courseId },
@@ -192,9 +190,9 @@ router.post('/dashboard/unenroll-partial/:courseId', (req, res) => {
       {},
       (err) => {
         if (err) {
-          return res.redirect('/dashboard?error=Nie+udało+się+wypisać+z+zajęć');
+          return res.redirect('/dashboard?error=Failed+to+unenroll+from+session');
         }
-        return res.redirect('/dashboard?success=Wypisano+z+zajęć');
+        return res.redirect('/dashboard?success=Unenrolled+from+session');
       }
     );
   });

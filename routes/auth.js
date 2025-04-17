@@ -1,18 +1,18 @@
-// ======================= IMPORTY =======================
+// ======================= IMPORTS =======================
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const usersDB = require('../db/usersDB');
 const loginLogsDB = require('../db/loginLogsDB');
 
-// ======================= KONFIGURACJA BLOKADY LOGOWANIA =======================
+// ======================= LOGIN ATTEMPT LIMIT CONFIG =======================
 const LOGIN_ATTEMPT_LIMIT = 5;
 const LOCK_TIME_MINUTES = 3;
-const loginAttempts = {}; // lokalna mapa z próbami logowania
+const loginAttempts = {}; 
 
-// ======================= LOGOWANIE =======================
+// ======================= LOGIN =======================
 
-// GET: Formularz logowania i rejestracji
+// GET: Login and registration form
 router.get('/login', (req, res) => {
   res.render('login', {
     loginData: {},
@@ -20,11 +20,11 @@ router.get('/login', (req, res) => {
   });
 });
 
-// POST: Obsługa logowania użytkownika
+// POST: Handle user login
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  // Walidacja pól
+  // Field validation
   if (!username || !password) {
     loginLogsDB.insert({ username, success: false, reason: 'Wrong login or Password', time: new Date().toISOString() });
     return res.render('login', {
@@ -33,7 +33,7 @@ router.post('/login', (req, res) => {
     });
   }
 
-  // Sprawdzenie blokady logowania
+  // Check login lock
   const attempt = loginAttempts[username];
   const now = Date.now();
   if (attempt && attempt.count >= LOGIN_ATTEMPT_LIMIT && now - attempt.time < LOCK_TIME_MINUTES * 60 * 1000) {
@@ -43,7 +43,7 @@ router.post('/login', (req, res) => {
     });
   }
 
-  // Szukanie użytkownika w bazie
+  // Find user in database
   usersDB.findOne({ username }, (err, user) => {
     if (err || !user) {
       loginLogsDB.insert({ username, success: false, reason: 'Wrong login', time: new Date().toISOString() });
@@ -53,12 +53,12 @@ router.post('/login', (req, res) => {
       });
     }
 
-    // Porównanie hasła
+    // Compare password
     bcrypt.compare(password, user.password, (err, match) => {
       if (!match) {
         loginLogsDB.insert({ username, success: false, reason: 'Wrong password', time: new Date().toISOString() });
 
-        // Liczenie prób nieudanego logowania
+        // Track failed login attempts
         if (!loginAttempts[username]) {
           loginAttempts[username] = { count: 1, time: now };
         } else {
@@ -77,36 +77,36 @@ router.post('/login', (req, res) => {
         });
       }
 
-        // Zalogowano pomyślnie – reset liczników
-        delete loginAttempts[username];
+      // Successful login – reset attempt counter
+      delete loginAttempts[username];
 
-        req.session.user = {
-          _id: user._id,
-          username: user.username,
-          role: user.role,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          phone: user.phone
-        };
+      req.session.user = {
+        _id: user._id,
+        username: user.username,
+        role: user.role,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone
+      };
 
-        loginLogsDB.insert({ username, success: true, time: new Date().toISOString() });
+      loginLogsDB.insert({ username, success: true, time: new Date().toISOString() });
 
-        // Przekierowanie zależnie od roli
-        if (user.role === 'admin') return res.redirect('/admin');
-        if (user.role === 'organiser') return res.redirect('/organiser');
-        return res.redirect('/dashboard');
+      // Redirect based on user role
+      if (user.role === 'admin') return res.redirect('/admin');
+      if (user.role === 'organiser') return res.redirect('/organiser');
+      return res.redirect('/dashboard');
     });
   });
 });
 
-// ======================= REJESTRACJA =======================
+// ======================= REGISTRATION =======================
 
-// POST: Obsługa rejestracji nowego użytkownika
+// POST: Handle user registration
 router.post('/register', (req, res) => {
   const { firstName, lastName, username, password, phone, email } = req.body;
 
-  // Sprawdzenie, czy wszystkie pola są wypełnione
+  // Check if all fields are filled
   if (!firstName || !lastName || !username || !password || !phone || !email) {
     return res.render('login', {
       errorMessage: 'All fields are required.',
@@ -114,7 +114,7 @@ router.post('/register', (req, res) => {
     });
   }
 
-  // Sprawdzenie unikalności loginu
+  // Check if username is already taken
   usersDB.findOne({ username }, (err, existingUser) => {
     if (existingUser) {
       return res.render('login', {
@@ -123,7 +123,7 @@ router.post('/register', (req, res) => {
       });
     }
 
-    // Haszowanie hasła i zapis nowego użytkownika
+    // Hash password and save new user
     bcrypt.hash(password, 10, (err, hashedPassword) => {
       if (err) return res.send('Error creating account.');
 
@@ -135,7 +135,7 @@ router.post('/register', (req, res) => {
         phone,
         email,
         role: 'user',
-        verified: true // na przyszłość – do weryfikacji mailowej
+        verified: true // reserved for future email verification
       };
 
       usersDB.insert(newUser, (err, insertedUser) => {
@@ -152,14 +152,14 @@ router.post('/register', (req, res) => {
   });
 });
 
-// ======================= WYLOGOWANIE =======================
+// ======================= LOGOUT =======================
 
-// GET: Wylogowanie użytkownika
+// GET: Log out the user
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/login');
   });
 });
 
-// ======================= EXPORT ROUTERA =======================
+// ======================= EXPORT ROUTER =======================
 module.exports = router;

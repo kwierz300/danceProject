@@ -1,16 +1,16 @@
-// ======================= IMPORTY =======================
+// ======================= IMPORTS =======================
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const usersDB = require('../db/usersDB');
 const { t } = require('../translations');
 
-// ======================= PANEL ADMINA =======================
+// ======================= ADMIN PANEL =======================
 
-// GET: Panel administratora – lista użytkowników z sortowaniem i filtrowaniem
+// GET: Admin panel – list of users with sorting and filtering
 router.get('/', (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
-    return res.status(403).send('<h2>Brak dostępu</h2>');
+    return res.status(403).send('<h2>Access denied</h2>');
   }
 
   const searchQuery = req.query.lastName?.trim()?.toLowerCase();
@@ -20,13 +20,13 @@ router.get('/', (req, res) => {
   const successMessage = req.query.success;
 
   usersDB.find({}, (err, allUsers) => {
-    if (err) return res.send('Błąd pobierania danych.');
+    if (err) return res.send('Error fetching data.');
 
     let filteredUsers = searchQuery
       ? allUsers.filter(u => u.lastName?.toLowerCase().includes(searchQuery))
       : allUsers;
 
-    // Sortowanie według wybranego pola
+    // Sorting by selected field
     filteredUsers.sort((a, b) => {
       const valA = (a[sortBy] || '').toLowerCase();
       const valB = (b[sortBy] || '').toLowerCase();
@@ -35,12 +35,12 @@ router.get('/', (req, res) => {
       return 0;
     });
 
-    // Podział na role
+    // Role-based grouping
     const admins = filteredUsers.filter(u => u.role === 'admin');
     const organisers = filteredUsers.filter(u => u.role === 'organiser');
     const users = filteredUsers.filter(u => u.role === 'user');
 
-    // Dodatkowe flagi dla przycisków w widoku
+    // Flags for buttons in the view
     [admins, organisers, users].forEach(group => {
       group.forEach(u => {
         u.isAdmin = u.role === 'admin';
@@ -64,19 +64,18 @@ router.get('/', (req, res) => {
       errorMessage,
       successMessage
     });
-    
   });
 });
 
-// ======================= EDYCJA DANYCH UŻYTKOWNIKA =======================
+// ======================= USER DATA EDITING =======================
 
-// GET: Formularz edycji danych użytkownika
+// GET: Edit user form
 router.get('/edit/:id', (req, res) => {
   const userId = req.params.id;
 
   usersDB.findOne({ _id: userId }, (err, user) => {
     if (err || !user) {
-      return res.status(404).send(t(req, 'User not found')); // też z tłumaczeniem
+      return res.status(404).send(t(req, 'User not found'));
     }
 
     res.render('editUser', {
@@ -86,31 +85,29 @@ router.get('/edit/:id', (req, res) => {
   });
 });
 
-// POST: Zapisanie edytowanych danych użytkownika (w tym loginu)
+// POST: Save updated user data
 router.post('/edit/:id', (req, res) => {
   const userId = req.params.id;
   const { firstName, lastName, email, phone, username } = req.body;
 
   if (!firstName || !lastName || !email || !phone || !username) {
-    return res.redirect('/admin?error=Wszystkie+pola+muszą+być+uzupełnione.');
+    return res.redirect('/admin?error=All+fields+are+required.');
   }
 
-  // Sprawdzenie czy login nie jest już zajęty przez innego użytkownika
+  // Check if username is already taken by another user
   usersDB.findOne({ username }, (err, existingUser) => {
-    if (err) return res.redirect('/admin?error=Błąd+bazy+danych.');
+    if (err) return res.redirect('/admin?error=Database+error.');
 
-    // Jeśli login jest już używany przez kogoś innego – błąd
     if (existingUser && existingUser._id !== userId) {
       return res.render('editUser', {
         title: t(req, 'Edit user'),
         errorMessage: t(req, 'This username is already taken.'),
         formData: { firstName, lastName, email, phone, username },
-        user: { _id: userId } // potrzebne do /edit/{{user._id}}
+        user: { _id: userId }
       });
     }
-    
 
-    // Aktualizacja danych użytkownika
+    // Update user data
     usersDB.update(
       { _id: userId },
       { $set: { firstName, lastName, email, phone, username } },
@@ -124,83 +121,82 @@ router.post('/edit/:id', (req, res) => {
             user: { _id: userId }
           });
         }
-    
+
         res.redirect(`/admin?success=${encodeURIComponent(t(req, 'User data updated successfully.'))}`);
       }
     );
-    
   });
 });
 
-// ======================= ZARZĄDZANIE ROLAMI =======================
+// ======================= ROLE MANAGEMENT =======================
 
-// POST: Zmiana roli user ⇄ organiser
+// POST: Toggle user role between 'user' and 'organiser'
 router.post('/toggle-role/:id', (req, res) => {
   const userId = req.params.id;
 
   usersDB.findOne({ _id: userId }, (err, user) => {
     if (!user || user.role === 'admin') {
-      return res.redirect('/admin?error=Nie+można+zmienić+roli+administratora.');
+      return res.redirect('/admin?error=Cannot+change+admin+role.');
     }
 
     const newRole = user.role === 'user' ? 'organiser' : 'user';
 
     usersDB.update({ _id: userId }, { $set: { role: newRole } }, {}, (err) => {
-      return res.redirect('/admin?success=Rola+użytkownika+została+zmieniona.');
+      return res.redirect('/admin?success=User+role+updated.');
     });
   });
 });
 
-// ======================= USUWANIE UŻYTKOWNIKÓW =======================
+// ======================= USER DELETION =======================
 
-// POST: Usuwanie użytkownika (poza adminem)
+// POST: Delete user (excluding admins)
 router.post('/delete/:id', (req, res) => {
   const userId = req.params.id;
 
   usersDB.findOne({ _id: userId }, (err, user) => {
     if (!user || user.role === 'admin') {
-      return res.redirect('/admin?error=Nie+można+usunąć+administratora.');
+      return res.redirect('/admin?error=Cannot+delete+admin.');
     }
 
     usersDB.remove({ _id: userId }, {}, (err, numRemoved) => {
-      return res.redirect('/admin?success=Użytkownik+został+usunięty.');
+      return res.redirect('/admin?success=User+deleted.');
     });
   });
 });
 
-// ======================= AWANS I DEGRADACJA ADMINÓW =======================
+// ======================= ADMIN PROMOTION/DEMOTION =======================
 
-// POST: Awans na administratora (z hasłem admina)
+// POST: Promote user to admin (requires admin password)
 router.post('/make-admin/:id', (req, res) => {
   const userId = req.params.id;
   const confirmPassword = req.body.confirmPassword;
 
   if (!req.session.user || req.session.user.role !== 'admin') {
-    return res.status(403).send('Brak dostępu.');
+    return res.status(403).send('Access denied.');
   }
 
   usersDB.findOne({ username: req.session.user.username }, (err, adminUser) => {
-    if (!adminUser) return res.send('Błąd autoryzacji.');
+    if (!adminUser) return res.send('Authorization error.');
 
     bcrypt.compare(confirmPassword, adminUser.password, (err, match) => {
       if (!match) {
-        return res.redirect('/admin?error=Błędne+hasło+–+nie+udało+się+awansować+użytkownika.');
+        return res.redirect('/admin?error=Incorrect+password+–+promotion+failed.');
       }
 
       usersDB.update({ _id: userId }, { $set: { role: 'admin' } }, {}, () => {
-        return res.redirect('/admin?success=Użytkownik+awansowany+na+administratora.');
+        return res.redirect('/admin?success=User+promoted+to+admin.');
       });
     });
   });
 });
 
-// POST: Degradacja administratora do roli organiser (z hasłem admina)
+// POST: Demote admin to organiser (requires admin password)
 router.post('/demote/:id', (req, res) => {
   const userId = req.params.id;
   const confirmPassword = req.body.confirmPassword;
 
   if (!req.session.user || req.session.user.role !== 'admin') {
-    return res.status(403).send('Brak dostępu.');
+    return res.status(403).send('Access denied.');
   }
 
   usersDB.findOne({ username: req.session.user.username }, (err, adminUser) => {
@@ -208,36 +204,36 @@ router.post('/demote/:id', (req, res) => {
 
     bcrypt.compare(confirmPassword, adminUser.password, (err, match) => {
       if (!match) {
-        return res.redirect('/admin?error=Błędne+hasło+–+nie+udało+się+zdegradować+administratora.');
+        return res.redirect('/admin?error=Incorrect+password+–+demotion+failed.');
       }
 
       usersDB.findOne({ _id: userId }, (err, user) => {
         if (!user || user.role !== 'admin' || user.username === req.session.user.username) {
-          return res.redirect('/admin?error=Nie+można+zdegradować+tego+użytkownika.');
+          return res.redirect('/admin?error=Cannot+demote+this+user.');
         }
 
         usersDB.update({ _id: userId }, { $set: { role: 'organiser' } }, {}, () => {
-          return res.redirect('/admin?success=Administrator+został+zdegradowany.');
+          return res.redirect('/admin?success=Admin+demoted+to+organiser.');
         });
       });
     });
   });
 });
 
-// ======================= RESETOWANIE HASŁA =======================
+// ======================= PASSWORD RESET =======================
 
-// POST: Reset hasła przez admina (w tym własnego z potwierdzeniem)
+// POST: Reset password by admin (including self, with confirmation)
 router.post('/reset-password/:id', (req, res) => {
   const userId = req.params.id;
   const newPassword = req.body.newPassword;
   const confirmPassword = req.body.confirmPassword;
 
   if (!req.session.user || req.session.user.role !== 'admin') {
-    return res.status(403).send('Brak dostępu.');
+    return res.status(403).send('Access denied.');
   }
 
   if (!newPassword || newPassword.length < 8) {
-    return res.redirect('/admin?error=Nowe+hasło+jest+za+krótkie.');
+    return res.redirect('/admin?error=Password+too+short.');
   }
 
   usersDB.findOne({ _id: userId }, (err, targetUser) => {
@@ -251,12 +247,12 @@ router.post('/reset-password/:id', (req, res) => {
 
         bcrypt.compare(confirmPassword, adminUser.password, (err, match) => {
           if (!match) {
-            return res.redirect('/admin?error=Błędne+hasło+administratora+–+nie+można+zresetować+własnego+hasła.');
+            return res.redirect('/admin?error=Incorrect+admin+password+–+cannot+reset+own+password.');
           }
 
           bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
             usersDB.update({ _id: userId }, { $set: { password: hashedPassword } }, {}, () => {
-              return res.redirect('/admin?success=Hasło+zostało+zmienione.');
+              return res.redirect('/admin?success=Password+updated.');
             });
           });
         });
@@ -264,7 +260,7 @@ router.post('/reset-password/:id', (req, res) => {
     } else {
       bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
         usersDB.update({ _id: userId }, { $set: { password: hashedPassword } }, {}, () => {
-          return res.redirect('/admin?success=Hasło+użytkownika+zostało+zresetowane.');
+          return res.redirect('/admin?success=User+password+reset.');
         });
       });
     }
