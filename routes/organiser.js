@@ -5,7 +5,7 @@ const usersDB = require('../db/usersDB');
 const coursesDB = require('../db/coursesDB');
 const { t } = require('../translations');
 
-// Panel organizatora – widok listy użytkowników
+// Organiser panel – user list view
 router.get('/organiser', (req, res) => {
   if (!req.session.user || (req.session.user.role !== 'organiser' && req.session.user.role !== 'admin')) {
     return res.status(403).send('<h2>Brak dostępu</h2>');
@@ -32,7 +32,7 @@ router.get('/organiser', (req, res) => {
       return 0;
     });
 
-    // Ustawiamy flagę czy to ten sam użytkownik
+    // Set a flag to indicate if the listed user is the currently logged-in user
     filteredUsers.forEach(u => {
       u.isSelf = u.username === req.session.user.username;
     });
@@ -52,7 +52,7 @@ router.get('/organiser', (req, res) => {
   });
 });
 
-// ---------------- Formularz edycji użytkownika ----------------
+// ---------------- User edit form ----------------
 router.get('/organiser/edit/:id', (req, res) => {
   usersDB.findOne({ _id: req.params.id }, (err, user) => {
     if (err || !user || user.role !== 'user') {
@@ -66,7 +66,7 @@ router.get('/organiser/edit/:id', (req, res) => {
   });
 });
 
-// ---------------- Zapisanie edytowanego użytkownika ----------------
+// ---------------- Save edited user data ----------------
 router.post('/organiser/edit/:id', (req, res) => {
   const userId = req.params.id;
   const { firstName, lastName, username, email, phone } = req.body;
@@ -100,7 +100,7 @@ router.post('/organiser/edit/:id', (req, res) => {
   });
 });
 
-// ---------------- Usuwanie użytkownika ----------------
+// ---------------- User deletion ----------------
 router.post('/organiser/delete/:id', (req, res) => {
   usersDB.findOne({ _id: req.params.id }, (err, user) => {
     if (!user || user.role !== 'user') {
@@ -113,7 +113,7 @@ router.post('/organiser/delete/:id', (req, res) => {
   });
 });
 
-// ---------------- Resetowanie hasła ----------------
+// ---------------- Password reset ----------------
 router.post('/organiser/reset-password/:id', (req, res) => {
   const userId = req.params.id;
   const { newPassword, confirmPassword } = req.body;
@@ -155,7 +155,7 @@ router.post('/organiser/reset-password/:id', (req, res) => {
   });
 });
 
-// POST: Dodanie nowego kursu
+// POST: Add new course
 router.post('/organiser/add-course', (req, res) => {
   const {
     title,
@@ -168,7 +168,7 @@ router.post('/organiser/add-course', (req, res) => {
     style,
     level,
     duration,
-    courseType, // <-- Nowe pole
+    courseType, 
     totalClasses 
   } = req.body;
 
@@ -184,7 +184,7 @@ router.post('/organiser/add-course', (req, res) => {
     fullPrice: Number(fullPrice),
     singlePrice: Number(singlePrice),
     capacity: Number(capacity),
-    totalClasses: Number(totalClasses), // ✔️ konwersja liczby tylko tutaj
+    totalClasses: Number(totalClasses), 
     style,
     level,
     duration: Number(duration),
@@ -261,7 +261,7 @@ router.get('/organiser/editCourse/:id', (req, res) => {
       return res.send('Nie znaleziono kursu.');
     }
 
-    // 🔽 Dodajemy pomocnicze flagi dla Mustache (bo nie obsługuje porównań)
+    // Add helper flags for Mustache 
     course.sessionsString = course.sessions.join(', ');
 
     course.isLevelBeginner = course.level === 'Beginner';
@@ -283,7 +283,7 @@ router.get('/organiser/editCourse/:id', (req, res) => {
     course.isStyleZumba = course.style === 'Zumba';
     course.isStyleContemporary = course.style === 'Contemporary';
 
-    // 🔁 Dodaj returnTo do widoku, np. wróć do poprzedniej strony lub lista kursów
+    // Add returnTo to the view
     const returnTo = req.query.returnTo || req.headers.referer || '/organiser';
 
     res.render('editCourse', { course, returnTo });
@@ -291,7 +291,7 @@ router.get('/organiser/editCourse/:id', (req, res) => {
 });
 
 
-// POST: Usunięcie kursu
+// POST: Delete course
 router.post('/organiser/delete-course/:id', (req, res) => {
   const courseId = req.params.id;
   const { confirmPassword } = req.body;
@@ -306,13 +306,13 @@ router.post('/organiser/delete-course/:id', (req, res) => {
       return res.redirect('/organiser?error=Nie+znaleziono+organizatora.');
     }
 
-    // Sprawdzenie poprawności hasła
+    // Check password validity
     bcrypt.compare(confirmPassword, organiser.password, (err, match) => {
       if (!match) {
         return res.redirect(`/organiser/edit-course/${courseId}?error=Nieprawidłowe+hasło.`);
       }
 
-      // Usunięcie kursu
+      // Delete course
       coursesDB.remove({ _id: courseId }, {}, (err, numRemoved) => {
         if (err || numRemoved === 0) {
           return res.redirect('/organiser?error=Nie+udało+się+usunąć+kursu.');
@@ -324,7 +324,7 @@ router.post('/organiser/delete-course/:id', (req, res) => {
   });
 });
 
-// Lista uczestników danego kursu – widok dla organizatora
+// Participant list for a given course – organiser view
 router.get('/organiser/course/:courseId/participants', (req, res) => {
   const courseId = req.params.courseId;
 
@@ -333,15 +333,15 @@ router.get('/organiser/course/:courseId/participants', (req, res) => {
       return res.redirect('/organiser?error=Nie+znaleziono+kursu');
     }
 
-    // 🔍 Przetwarzamy uczestników, żeby mieć pewność że każdy ma imię, nazwisko itd.
+    // Process participants to ensure each has name, surname
     const enhancedParticipants = course.participants.map(p => ({
       ...p,
       isGuest: p.isGuest,
-      firstName: p.firstName || '',   // dla zalogowanych
+      firstName: p.firstName || '',   
       lastName: p.lastName || '',
       phone: p.phone || '',
-      name: p.name || '',             // dla gości
-      username: p.username || ''      // dla zalogowanych
+      name: p.name || '',             
+      username: p.username || ''      
     }));
 
     console.log('📋 Lista uczestników:', enhancedParticipants);
@@ -355,7 +355,7 @@ router.get('/organiser/course/:courseId/participants', (req, res) => {
   });
 });
 
-// POST: Usuń uczestnika z kursu (na podstawie username lub name)
+// POST: Remove participant from course (based on username or name)
 router.post('/organiser/course/:courseId/remove-participant', (req, res) => {
   const courseId = req.params.courseId;
   const { username, name } = req.body;
@@ -363,9 +363,9 @@ router.post('/organiser/course/:courseId/remove-participant', (req, res) => {
   let condition = {};
 
   if (username) {
-    condition = { username }; // dla zalogowanych
+    condition = { username }; // for logged in
   } else if (name) {
-    condition = { name };     // dla gości (usunie po imieniu+nazwisku)
+    condition = { name };     // for guests
   } else {
     return res.redirect(`/organiser/course/${courseId}/participants?error=Brak+danych+uczestnika`);
   }
@@ -384,7 +384,7 @@ router.post('/organiser/course/:courseId/remove-participant', (req, res) => {
   );
 });
 
-// Lista uczestników pojedynczych zajec – widok dla organizatora
+// Participant list for single sessions – organiser view
 router.get('/course/:id/participants-for-date', (req, res) => {
   const courseId = req.params.id;
   const selectedDate = req.query.selectedDate;
@@ -394,7 +394,7 @@ router.get('/course/:id/participants-for-date', (req, res) => {
       return res.send('Nie znaleziono kursu.');
     }
 
-    // Filtruj tylko tych uczestników, którzy mają wybraną datę
+    // Filter only participants who have the selected date
     const participants = course.participants.filter(p =>
       Array.isArray(p.sessions) && p.sessions.includes(selectedDate)
     );
@@ -409,7 +409,7 @@ router.get('/course/:id/participants-for-date', (req, res) => {
   });
 });
 
-// GET: Formularz wyboru daty zajęć
+// GET: Form to select session date
 router.get('/organiser/course/:courseId/participants-by-date', (req, res) => {
   const courseId = req.params.courseId;
 
@@ -429,7 +429,7 @@ router.get('/organiser/course/:courseId/participants-by-date', (req, res) => {
   });
 });
 
-// GET: Uczestnicy na konkretną datę
+// GET: Participants for a specific date
 router.get('/organiser/course/:courseId/participants-for-date', (req, res) => {
   const courseId = req.params.courseId;
   const selectedDate = req.query.selectedDate;
@@ -439,7 +439,7 @@ router.get('/organiser/course/:courseId/participants-for-date', (req, res) => {
       return res.redirect('/organiser?error=Nie+znaleziono+kursu');
     }
 
-    // Filtrujemy tylko tych uczestników, którzy zapisali się na daną datę
+    // Filter only participants who enrolled for the selected date
     const participantsForDate = (course.partialParticipants || []).filter(p =>
       Array.isArray(p.selectedDates) && p.selectedDates.includes(selectedDate)
     );
@@ -454,7 +454,7 @@ router.get('/organiser/course/:courseId/participants-for-date', (req, res) => {
   });
 });
 
-// POST: Usuń uczestnika tylko z jednej konkretnej daty
+// POST: Remove participant from one specific date
 router.post('/organiser/course/:courseId/remove-participant-for-date', (req, res) => {
   const courseId = req.params.courseId;
   const { username, name, email, selectedDate } = req.body;
@@ -469,20 +469,20 @@ router.post('/organiser/course/:courseId/remove-participant-for-date', (req, res
     }
 
     let updatedList = (course.partialParticipants || []).map(p => {
-      // Dopasowanie uczestnika (zalogowany lub gość)
+      // Match participant (logged-in or guest)
       const isMatch = username
         ? p.username === username
         : (p.name === name && p.email === email);
 
       if (isMatch) {
-        // Filtruj tylko inne daty – usuń wybraną
+        // Filter out selected date – keep only the rest
         const updatedDates = (p.selectedDates || []).filter(d => d !== selectedDate);
         return updatedDates.length > 0
           ? { ...p, selectedDates: updatedDates }
-          : null; // jeśli nie ma już dat, usuń cały obiekt
+          : null; // If no dates left, remove the entire object
       }
       return p;
-    }).filter(Boolean); // usuń null
+    }).filter(Boolean); // Remove null values
 
     coursesDB.update(
       { _id: courseId },

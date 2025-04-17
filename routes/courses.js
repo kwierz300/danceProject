@@ -3,14 +3,14 @@ const router = express.Router();
 const coursesDB = require('../db/coursesDB');
 const usersDB = require('../db/usersDB');
 const bcrypt = require('bcryptjs');
-const { t } = require('../translations'); // ✅ Używamy centralnego tłumaczenia
+const { t } = require('../translations'); 
 
-// Domyślne przekierowanie z /courses na /courses/weekly
+// Default redirect from /courses to /courses/weekly
 router.get('/courses', (req, res) => {
   res.redirect('/courses/weekly');
 });
 
-// Kursy cotygodniowe
+// Weekly sessions
 router.get('/courses/weekly', (req, res) => {
   coursesDB.find({ courseType: 'Weekly Sessions' }, (err, courses) => {
     if (err) {
@@ -25,7 +25,6 @@ router.get('/courses/weekly', (req, res) => {
     const enrichedCourses = courses.map(course => {
       const alreadyEnrolledFully = (course.participants || []).some(p => p.username === username);
 
-      // 🔁 Ustandaryzuj styl i poziom (do kluczy EN z translations.js)
       const styleMap = {
         "Balet": "Ballet",
         "Taniec towarzyski": "Ballroom"
@@ -61,7 +60,7 @@ router.get('/courses/weekly', (req, res) => {
   });
 });
 
-// Kursy weekendowe i indywidualne
+// Weekend and single-day courses
 router.get('/courses/other', (req, res) => {
   coursesDB.find({ courseType: { $ne: 'Weekly Sessions' } }, (err, courses) => {
     if (err) {
@@ -77,7 +76,6 @@ router.get('/courses/other', (req, res) => {
     const enrichedCourses = filteredCourses.map(course => {
       const alreadyEnrolledFully = (course.participants || []).some(p => p.username === username);
 
-      // 🔁 Taka sama normalizacja jak wyżej
       const styleMap = {
         "Balet": "Ballet",
         "Taniec towarzyski": "Ballroom"
@@ -113,8 +111,7 @@ router.get('/courses/other', (req, res) => {
   });
 });
 
-
-// 🔐 Zalogowany użytkownik – pełny zapis
+// Logged-in user – enroll in full course
 router.post('/courses/enrol/:id', (req, res) => {
   const courseId = req.params.id;
   const { confirmPassword } = req.body;
@@ -178,7 +175,7 @@ router.post('/courses/enrol/:id', (req, res) => {
   });
 });
 
-// 👤 Gość – zapis na cały kurs
+// Guest – enroll in full course
 router.post('/courses/guest-enrol/:id', (req, res) => {
   const courseId = req.params.id;
   const { firstName, lastName, email, phone } = req.body;
@@ -212,17 +209,16 @@ router.post('/courses/guest-enrol/:id', (req, res) => {
   });
 });
 
-// ✅ Zapis na pojedyncze zajęcia
+// Enroll in selected sessions
 router.post('/courses/partial-enrol/:id', (req, res) => {
   const courseId = req.params.id;
   const selectedSessions = Array.isArray(req.body.selectedSessions)
     ? req.body.selectedSessions
     : [req.body.selectedSessions];
 
-    if (!selectedSessions || selectedSessions.length === 0 || selectedSessions[0] === '') {
-      return res.redirect('/courses/weekly?error=' + encodeURIComponent(t(req, 'Fill in all fields')));
-    }
-    
+  if (!selectedSessions || selectedSessions.length === 0 || selectedSessions[0] === '') {
+    return res.redirect('/courses/weekly?error=' + encodeURIComponent(t(req, 'Fill in all fields')));
+  }
 
   const isLoggedIn = !!req.session.user;
 
@@ -257,7 +253,6 @@ router.post('/courses/partial-enrol/:id', (req, res) => {
         );
       });
     });
-
   } else {
     const { firstName, lastName, email, phone } = req.body;
 
