@@ -3,18 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>{{courseTitle}} – {{#t}}Select date{{/t}}</title>
+
+  <!-- Bootstrap & custom styles -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
   <div id="page-wrapper">
+    <!-- Navigation bar -->
     {{> navbar }}
 
     <main>
       <div class="container">
+
+        <!-- Page title with course name and action -->
         <h1 class="mb-4 text-center text-navbar">{{courseTitle}} – {{#t}}Select date{{/t}}</h1>
 
+        <!-- Form to choose a session date -->
         <form method="GET" action="/organiser/course/{{courseId}}/participants-for-date" class="form-wrapper">
+
+          <!-- Dropdown with available session dates -->
           <div class="mb-3">
             <label for="selectedDate" class="form-label">{{#t}}Session date:{{/t}}</label>
             <select name="selectedDate" id="selectedDate" class="form-select" required>
@@ -24,6 +33,7 @@
             </select>
           </div>
 
+          <!-- Submit button -->
           <div class="d-flex justify-content-center mt-4">
             <button type="submit" class="btn btn-navbar">{{#t}}Show participants{{/t}}</button>
           </div>
@@ -31,9 +41,11 @@
       </div>
     </main>
 
+    <!-- Footer -->
     {{> footer }}
   </div>
 
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

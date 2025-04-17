@@ -3,27 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <title>{{t title}}</title>
+
+  <!-- Bootstrap & custom styles -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
   <div id="page-wrapper">
-    <!-- 🔼 Pasek nawigacji -->
+    <!-- Global navigation bar -->
     {{> navbar}}
 
-    <!-- 🔽 Główna zawartość -->
+    <!-- Course listings -->
     <main>
       <div class="container">
+
+        <!-- Page heading (translated title) -->
         <h1 class="mb-4 text-center text-navbar">{{#t}}{{title}}{{/t}}</h1>
 
+        <!-- Success alert -->
         {{#successMessage}}
           <div class="alert alert-success text-center">{{successMessage}}</div>
         {{/successMessage}}
 
+        <!-- Error alert -->
         {{#errorMessage}}
           <div class="alert alert-danger text-center">{{errorMessage}}</div>
         {{/errorMessage}}
 
+        <!-- Display courses if available -->
         {{#hasCourses}}
           <div class="row row-cols-1 row-cols-md-2 g-4 justify-content-center">
             {{#courses}}
@@ -32,37 +40,38 @@
           </div>
         {{/hasCourses}}
 
+        <!-- Message if no courses found -->
         {{^hasCourses}}
           <p class="text-muted text-center">{{t "No courses available in this category."}}</p>
         {{/hasCourses}}
+
       </div>
     </main>
 
-    <!-- 🔽 Stopka -->
+    <!-- Global footer -->
     {{> footer}}
   </div>
 
-  <!-- 🔽 Bootstrap JS -->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const allForms = document.querySelectorAll('form[action^="/courses/partial-enrol"]');
+  <!-- Ensure at least one session checkbox is checked before submission -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const allForms = document.querySelectorAll('form[action^="/courses/partial-enrol"]');
 
-        allForms.forEach(form => {
-          const requiredCheckbox = form.querySelector('#atLeastOneSession');
-          const sessionCheckboxes = form.querySelectorAll('input[name="selectedSessions"]');
+      allForms.forEach(form => {
+        const requiredCheckbox = form.querySelector('#atLeastOneSession');
+        const sessionCheckboxes = form.querySelectorAll('input[name="selectedSessions"]');
 
-          sessionCheckboxes.forEach(cb => {
-            cb.addEventListener('change', () => {
-              const anyChecked = Array.from(sessionCheckboxes).some(c => c.checked);
-              requiredCheckbox.checked = anyChecked;
-            });
+        sessionCheckboxes.forEach(cb => {
+          cb.addEventListener('change', () => {
+            const anyChecked = Array.from(sessionCheckboxes).some(c => c.checked);
+            requiredCheckbox.checked = anyChecked;
           });
         });
       });
-    </script>
-
-
+    });
+  </script>
 </body>
 </html>

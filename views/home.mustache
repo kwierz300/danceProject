@@ -4,17 +4,16 @@
   <meta charset="UTF-8" />
   <title>{{title}}</title>
 
-  <!-- Bootstrap CSS -->
+  <!-- Bootstrap & custom styles -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-  <!-- Twój styl -->
   <link rel="stylesheet" href="/style.css" />
 </head>
 
 <body>
-  <!-- Pasek nawigacji -->
+  <!-- Reusable navigation bar -->
   {{> navbar}}
 
-  <!-- 🔽 Sekcja główna z tłem -->
+  <!-- Hero section with background image -->
   <section class="hero-section position-relative mb-0">
     <img src="/hero.jpg" alt="Banner" class="w-100 hero-img" />
     <div class="hero-text text-center align-bottom">
@@ -22,7 +21,7 @@
     </div>
   </section>
 
-  <!-- 🔽 Główna treść -->
+  <!-- Main welcome message -->
   <main class="container text-center main-description mb-5">
     <p>
       {{#t}}We offer a wide variety of dance classes — from weekly sessions to intensive weekend workshops. Our instructors will keep you smiling, fit and full of dancing energy!{{/t}}
@@ -31,6 +30,7 @@
       {{#t}}Join our community and start your dance journey today!{{/t}}
     </p>
 
+    <!-- CTA buttons for guests only -->
     {{^sessionUser}}
     <div class="d-flex justify-content-center main-buttons mt-4">
       <a href="/login" class="btn btn-navbar">{{#t}}Login{{/t}}</a>
@@ -39,7 +39,7 @@
     </div>
     {{/sessionUser}}
 
-    <!-- 🔽 Google Map -->
+    <!-- Embedded Google Map -->
     <div class="map-container mt-4">
       <iframe
         width="100%"
@@ -53,7 +53,7 @@
     </div>
   </main>
 
-  <!-- Stopka -->
+  <!-- Reusable footer -->
   {{> footer}}
 
   <!-- Bootstrap JS -->

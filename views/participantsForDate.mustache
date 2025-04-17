@@ -3,18 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <title>{{title}}</title>
+
+  <!-- Bootstrap & custom styles -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
   <div id="page-wrapper">
+    <!-- Navigation bar -->
     {{> navbar }}
 
     <main>
       <div class="container">
+        <!-- Course title with selected date -->
         <h1 class="text-center text-navbar mb-4">{{courseTitle}} – {{#t}}Participants for date{{/t}}</h1>
         <h5 class="text-center text-muted mb-5">{{#t}}Date:{{/t}} {{selectedDate}}</h5>
 
+        <!-- If participants are present -->
         {{#participants.length}}
           <div class="table-section">
             <table class="table table-bordered">
@@ -29,23 +35,38 @@
               <tbody>
                 {{#participants}}
                   <tr>
+                    <!-- Full name -->
                     <td>
                       {{#isGuest}}{{name}}{{/isGuest}}
                       {{^isGuest}}{{firstName}} {{lastName}}{{/isGuest}}
                     </td>
+
+                    <!-- Phone number -->
                     <td>{{phone}}</td>
-                    <td>{{#isGuest}}{{#t}}Guest{{/t}}{{/isGuest}}{{^isGuest}}{{#t}}Logged in{{/t}}{{/isGuest}}</td>
+
+                    <!-- Participant type -->
+                    <td>
+                      {{#isGuest}}{{#t}}Guest{{/t}}{{/isGuest}}
+                      {{^isGuest}}{{#t}}Logged in{{/t}}{{/isGuest}}
+                    </td>
+
+                    <!-- Remove participant (for this date only) -->
                     <td>
                       <form method="POST" action="/organiser/course/{{courseId}}/remove-participant-for-date" class="d-inline">
                         <input type="hidden" name="selectedDate" value="{{selectedDate}}">
+
                         {{#isGuest}}
                           <input type="hidden" name="name" value="{{name}}">
                           <input type="hidden" name="email" value="{{email}}">
                         {{/isGuest}}
+
                         {{^isGuest}}
                           <input type="hidden" name="username" value="{{username}}">
                         {{/isGuest}}
-                        <button type="submit" class="btn btn-danger btn-sm">{{#t}}Remove{{/t}}</button>
+
+                        <button type="submit" class="btn btn-danger btn-sm">
+                          {{#t}}Remove{{/t}}
+                        </button>
                       </form>
                     </td>
                   </tr>
@@ -55,19 +76,25 @@
           </div>
         {{/participants.length}}
 
+        <!-- If no participants -->
         {{^participants.length}}
           <p class="text-muted text-center">{{#t}}No participants for this date.{{/t}}</p>
         {{/participants.length}}
 
+        <!-- Back to date selection -->
         <div class="text-center mt-4">
-          <a href="/organiser/course/{{courseId}}/participants-by-date" class="btn btn-navbar-muted">{{#t}}Select another date{{/t}}</a>
+          <a href="/organiser/course/{{courseId}}/participants-by-date" class="btn btn-navbar-muted">
+            {{#t}}Select another date{{/t}}
+          </a>
         </div>
       </div>
     </main>
 
+    <!-- Footer -->
     {{> footer }}
   </div>
 
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
